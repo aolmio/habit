@@ -1,0 +1,1370 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Habits</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg-base: #000000;
+    --bg-surface: #111111;
+    --bg-element: #222222;
+    --bg-hover: #333333;
+    --text-primary: #FFFFFF;
+    --text-secondary: #999999;
+    --border-color: #333333;
+    --accent: #FFFFFF;
+    --accent-invert: #000000;
+    --danger: #FF4444;
+    --radius: 4px;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+  }
+
+  button, input, select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .app-layout {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .sidebar {
+    width: 260px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .habit-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+  }
+  .habit-list::-webkit-scrollbar { width: 4px; }
+  .habit-list::-webkit-scrollbar-thumb { background: var(--border-color); }
+
+  .habit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+  .habit-item:hover { background: var(--bg-element); }
+  .habit-item.active {
+    background: var(--bg-element);
+    border-left: 3px solid var(--text-primary);
+  }
+
+  .habit-icon {
+    font-size: 16px;
+    width: 24px;
+    text-align: center;
+  }
+
+  .habit-meta { flex: 1; min-width: 0; }
+  .habit-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .habit-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  
+  .progress-bar {
+    flex: 1;
+    height: 2px;
+    background: var(--border-color);
+  }
+  .progress-fill {
+    height: 100%;
+    transition: width 0.3s;
+  }
+  .progress-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--bg-element);
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .btn:hover { background: var(--bg-hover); }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--accent-invert);
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: #e0e0e0; }
+  .btn-danger {
+    color: var(--danger);
+    border-color: var(--border-color);
+  }
+  .btn-danger:hover { background: rgba(255, 68, 68, 0.1); border-color: var(--danger); }
+
+  .add-btn-container {
+    padding: 10px;
+    border-top: 1px solid var(--border-color);
+  }
+  .add-btn-container .btn { width: 100%; }
+
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .topbar {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .date-display {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--border-color);
+    padding: 2px;
+    border-radius: var(--radius);
+  }
+  .tab {
+    padding: 4px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .logout-tab {
+    margin-left: 12px;
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .logout-tab:hover { text-decoration: underline; }
+
+  .viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 24px;
+    position: relative;
+  }
+  .viewport::-webkit-scrollbar { width: 4px; }
+  .viewport::-webkit-scrollbar-thumb { background: var(--border-color); }
+
+  .loader-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-secondary);
+    text-align: center;
+  }
+  .empty-state h2 {
+    color: var(--text-primary);
+    margin: 16px 0 8px;
+    font-weight: 500;
+  }
+
+  .today-container {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .habit-header {
+    text-align: center;
+    margin-bottom: 32px;
+    width: 100%;
+  }
+  .habit-emoji {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .habit-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .habit-type {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  .arc-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 32px;
+  }
+  .arc-svg { transform: rotate(-90deg); }
+  .arc-track { stroke: var(--bg-element); fill: none; }
+  .arc-value { fill: none; transition: stroke-dashoffset 0.5s linear; }
+
+  .arc-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .arc-number {
+    font-family: var(--font-mono);
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1;
+  }
+  .arc-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .action-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .toggle-btn {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 2px solid;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .toggle-btn.completed {
+    opacity: 0.5;
+  }
+  .toggle-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  .counter-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg-surface);
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+  }
+  .counter-btn {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-element);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .counter-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .counter-display {
+    text-align: center;
+    min-width: 60px;
+  }
+  .counter-value {
+    font-family: var(--font-mono);
+    font-size: 20px;
+  }
+  .counter-target {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+
+  .journey-section {
+    margin-top: 48px;
+    width: 100%;
+  }
+  .journey-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .journey-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+  .edit-trigger {
+    background: none;
+    border: none;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .level-track { display: flex; gap: 4px; }
+  .level-segment {
+    flex: 1;
+    height: 4px;
+    background: var(--bg-element);
+  }
+  .journey-text {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .calendar-container { max-width: 500px; margin: 0 auto; }
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .nav-btn {
+    background: var(--bg-element);
+    border: 1px solid var(--border-color);
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .month-label { font-weight: 500; }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .day-label {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+  .day-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-surface);
+    border: 1px solid transparent;
+  }
+  .day-cell.empty { background: transparent; }
+  .day-cell.future { color: var(--bg-hover); background: transparent; }
+  .day-cell.today { border-color: var(--text-secondary); }
+  .day-cell.done { color: #000; font-weight: bold; }
+  .day-cell.missed { border: 1px dashed var(--border-color); background: transparent; color: var(--text-secondary); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .stat-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: var(--radius);
+  }
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  .stats-container { max-width: 500px; margin: 0 auto; }
+  .heatmap-wrapper {
+    display: grid;
+    grid-template-columns: repeat(52, 1fr);
+    gap: 2px;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .heat-node {
+    width: 100%;
+    aspect-ratio: 1;
+    background: var(--bg-element);
+    min-width: 8px;
+  }
+  .heat-node.lvl-1 { opacity: 0.4; }
+  .heat-node.lvl-2 { opacity: 0.6; }
+  .heat-node.lvl-3 { opacity: 0.8; }
+  .heat-node.lvl-4 { opacity: 1; }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    border-radius: var(--radius);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .form-control {
+    width: 100%;
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--text-primary);
+  }
+
+  .selector-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .selector-item {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-element);
+    border: 1px solid transparent;
+    cursor: pointer;
+    border-radius: var(--radius);
+  }
+  .selector-item.selected {
+    border-color: var(--text-primary);
+  }
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+  }
+
+  .modal-footer {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .modal-footer .btn { flex: 1; }
+
+  .auth-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+  .auth-box {
+    width: 100%;
+    max-width: 320px;
+    padding: 24px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+  }
+
+  .toast-msg {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: var(--bg-base);
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 300;
+  }
+  .toast-msg.visible { opacity: 1; }
+
+  .achievement-card {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: var(--radius);
+    transform: translateX(120%);
+    transition: transform 0.3s;
+    z-index: 300;
+  }
+  .achievement-card.visible { transform: translateX(0); }
+  .ach-icon { font-size: 24px; }
+  .ach-title { font-weight: 600; font-size: 13px; }
+  .ach-desc { font-size: 11px; color: var(--text-secondary); }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 40;
+      transform: translateX(-100%);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .menu-toggle { display: block; }
+    .viewport { padding: 20px 16px; }
+    .arc-container { width: 160px; height: 160px; }
+    .arc-number { font-size: 40px; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-box { padding: 12px 8px; }
+    .stat-value { font-size: 18px; }
+    
+    .sidebar-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 35;
+      display: none;
+    }
+    .sidebar-mask.active { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-screen" id="authScreen" style="display: none;">
+  <div class="auth-box">
+    <div class="modal-title">Connect Database</div>
+    <div class="form-group">
+      <label class="form-label">Supabase URL</label>
+      <input class="form-control" id="authUrl" placeholder="https://..." autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Anon Public Key</label>
+      <input class="form-control" id="authKey" type="password" placeholder="eyJh..." autocomplete="off">
+    </div>
+    <button class="btn btn-primary" style="width: 100%;" onclick="submitAuth()">Connect</button>
+  </div>
+</div>
+
+<div class="app-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">Habits</div>
+    <div class="habit-list" id="sidebarList"></div>
+    <div class="add-btn-container">
+      <button class="btn" onclick="openHabitModal()">+ New Habit</button>
+    </div>
+  </aside>
+  <div class="sidebar-mask" id="sidebarMask" onclick="closeMenu()"></div>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="openMenu()">☰</button>
+        <div class="date-display" id="currentDate"></div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchView('today', this)">Today</button>
+        <button class="tab" onclick="switchView('calendar', this)">Calendar</button>
+        <button class="tab" onclick="switchView('stats', this)">Stats</button>
+        <button class="logout-tab" onclick="clearAuth()">Disconnect</button>
+      </div>
+    </header>
+    
+    <div class="viewport" id="viewport">
+      <div class="loader-overlay" id="loadingState">Syncing...</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="habitModal" onclick="checkModalClick(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">New Habit</div>
+    
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-control" id="fName" maxlength="40">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Icon</label>
+      <div class="selector-grid" id="fEmoji"></div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Color</label>
+      <div class="selector-grid" id="fColor"></div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select class="form-control" id="fType" onchange="renderExtraFields()">
+        <option value="daily">Daily</option>
+        <option value="multi">Multi-Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="break">Avoid Habit</option>
+      </select>
+    </div>
+    
+    <div id="fExtra"></div>
+    
+    <div class="form-group">
+      <label class="form-label">Goal (Reps)</label>
+      <input class="form-control" id="fGoal" type="number" min="1" max="365" value="60">
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn" onclick="closeHabitModal()">Cancel</button>
+      <button class="btn btn-danger" id="fDelete" style="display:none" onclick="processDelete()">Delete</button>
+      <button class="btn btn-primary" onclick="processSave()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-msg" id="toastMsg"></div>
+
+<div class="achievement-card" id="achCard">
+  <div class="ach-icon" id="achIcon"></div>
+  <div>
+    <div class="ach-title" id="achTitle"></div>
+    <div class="ach-desc" id="achDesc"></div>
+  </div>
+</div>
+
+<script>
+const COLORS = ['#FF4444','#FF8800','#FFCC00','#00C851','#33B5E5','#4285F4','#AA66CC','#E0E0E0'];
+const EMOJIS = ['🧘','🏃','📚','✍️','💧','🥗','🚭','☕','🎨','🎵','💊','🧹','📵','💪','🛌','🌿','🧠','❤️','🎯','⚡'];
+const JOURNEY = [
+  "Started.",
+  "First week down.",
+  "Momentum building.",
+  "One month.",
+  "Halfway.",
+  "Home stretch.",
+  "Almost automatic.",
+  "Habit formed."
+];
+const ACH_DATA = [
+  { reps:1, icon:'🌱', title:'First Step', sub:'You started.' },
+  { reps:7, icon:'🔥', title:'One Week', sub:'7 reps done.' },
+  { reps:21, icon:'⚡', title:'Three Weeks', sub:'Building momentum.' },
+  { reps:30, icon:'🏔️', title:'Halfway', sub:'30 reps achieved.' },
+  { reps:60, icon:'🏆', title:'Formed', sub:'60 reps completed.' }
+];
+
+let supabaseClient = null;
+let habitData = []; 
+let currentHabitId = null;
+let activeView = 'today';
+let editId = null;
+let activeEmoji = EMOJIS[0];
+let activeColor = COLORS[0];
+let calDate = new Date();
+
+function initApp() {
+  const url = localStorage.getItem('SB_URL');
+  const key = localStorage.getItem('SB_KEY');
+  
+  if (!url || !key) {
+    document.getElementById('authScreen').style.display = 'flex';
+  } else {
+    setupDatabase(url, key);
+  }
+  
+  const d = new Date();
+  document.getElementById('currentDate').textContent = d.toISOString().slice(0, 10);
+}
+
+function submitAuth() {
+  const url = document.getElementById('authUrl').value.trim();
+  const key = document.getElementById('authKey').value.trim();
+  if (url && key) {
+    localStorage.setItem('SB_URL', url);
+    localStorage.setItem('SB_KEY', key);
+    document.getElementById('authScreen').style.display = 'none';
+    setupDatabase(url, key);
+  } else {
+    notify('Required fields missing');
+  }
+}
+
+function clearAuth() {
+  localStorage.removeItem('SB_URL');
+  localStorage.removeItem('SB_KEY');
+  window.location.reload();
+}
+
+function setupDatabase(url, key) {
+  supabaseClient = supabase.createClient(url, key);
+  fetchData();
+}
+
+async function fetchData() {
+  const { data, error } = await supabaseClient
+    .from('habits')
+    .select('*')
+    .order('createdAt', { ascending: true });
+
+  if (error) {
+    document.getElementById('loadingState').textContent = 'Error connecting to database';
+    return;
+  }
+
+  habitData = data || [];
+  if (habitData.length > 0 && !currentHabitId) currentHabitId = habitData[0].id;
+  
+  document.getElementById('loadingState').style.display = 'none';
+  refreshUI();
+}
+
+async function pushData(item) {
+  const { error } = await supabaseClient.from('habits').upsert(item);
+  if (error) notify("Cloud sync error");
+}
+
+async function dropData(id) {
+  const { error } = await supabaseClient.from('habits').delete().eq('id', id);
+  if (error) notify("Cloud delete error");
+}
+
+function findHabit(id) { return habitData.find(h => h.id === id); }
+
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function countTotal(h) {
+  if (!h.log) return 0;
+  if (h.type === 'daily' || h.type === 'break') {
+    return Object.values(h.log).filter(v => v).length;
+  }
+  if (h.type === 'multi') {
+    return Object.values(h.log).reduce((s, v) => s + (v || 0), 0);
+  }
+  if (h.type === 'weekly') {
+    let r = 0;
+    const w = groupWeeks(h.log);
+    for (const [, d] of Object.entries(w)) {
+      if (d >= (h.weeklyGoal || 3)) r++;
+    }
+    return r;
+  }
+  return 0;
+}
+
+function groupWeeks(log) {
+  const w = {};
+  for (const [k, v] of Object.entries(log)) {
+    if (!v) continue;
+    const d = new Date(k + 'T00:00:00');
+    const m = new Date(d); m.setDate(d.getDate() - ((d.getDay()+6)%7));
+    const k2 = m.toISOString().slice(0,10);
+    w[k2] = (w[k2] || 0) + 1;
+  }
+  return w;
+}
+
+function calcProgress(h) { return Math.min(countTotal(h) / (h.goal || 60), 1); }
+
+function checkToday(h) {
+  const k = getTodayKey();
+  if (h.type === 'multi') return (h.log?.[k] || 0) >= (h.dailyTarget || 1);
+  return !!h.log?.[k];
+}
+
+function calcLevel(h) {
+  const r = countTotal(h);
+  const g = h.goal || 60;
+  return Math.min(7, Math.floor(r / g * 8));
+}
+
+function buildSidebar() {
+  const el = document.getElementById('sidebarList');
+  if (!habitData.length) { 
+    el.innerHTML = `<div style="color:var(--text-secondary);font-size:12px;text-align:center;margin-top:20px;">No items</div>`; 
+    return; 
+  }
+  
+  el.innerHTML = habitData.map(h => {
+    const p = calcProgress(h) * 100;
+    const r = countTotal(h);
+    const g = h.goal || 60;
+    const active = h.id === currentHabitId ? 'active' : '';
+    
+    return `<div class="habit-item ${active}" onclick="pickHabit('${h.id}')">
+      <div class="habit-icon">${h.emoji}</div>
+      <div class="habit-meta">
+        <div class="habit-name">${h.name}</div>
+        <div class="habit-progress">
+          <div class="progress-bar"><div class="progress-fill" style="width:${p}%;background:${h.color}"></div></div>
+          <div class="progress-text">${r}/${g}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function refreshUI() {
+  buildSidebar();
+  const el = document.getElementById('viewport');
+  const h = findHabit(currentHabitId);
+  
+  if (!habitData.length || !h) {
+    el.innerHTML = `<div class="empty-state">
+      <h2>Database Empty</h2>
+      <p>Create a habit to begin tracking.</p>
+    </div>`;
+    return;
+  }
+  
+  if (activeView === 'today') drawToday(el, h);
+  else if (activeView === 'calendar') drawCalendar(el, h);
+  else drawStats(el, h);
+}
+
+function drawToday(el, h) {
+  const r = countTotal(h);
+  const g = h.goal || 60;
+  const p = Math.min(r / g, 1);
+  const lvl = calcLevel(h);
+  const tk = getTodayKey();
+  const checked = checkToday(h);
+
+  const rad = 90; 
+  const circ = 2 * Math.PI * rad;
+  const dash = circ * p;
+
+  let controls = '';
+  if (h.type === 'multi') {
+    const val = h.log?.[tk] || 0;
+    const tgt = h.dailyTarget || 1;
+    controls = `<div class="counter-group">
+      <button class="counter-btn" onclick="modifyMulti(-1)" ${val===0?'disabled':''}>-</button>
+      <div class="counter-display">
+        <div class="counter-value">${val}</div>
+        <div class="counter-target">/ ${tgt}</div>
+      </div>
+      <button class="counter-btn" onclick="modifyMulti(1)">+</button>
+    </div>`;
+  } else {
+    const lbl = h.type === 'break' ? (checked ? 'Avoided' : 'Mark Avoided') :
+                h.type === 'weekly' ? (checked ? 'Done' : 'Mark Done') :
+                (checked ? 'Completed' : 'Mark Complete');
+    controls = `<button class="toggle-btn ${checked?'completed':''}" style="border-color:${h.color};color:${h.color}" onclick="toggleDaily()">
+      ${checked ? '✓' : ''}
+    </button>
+    <div class="toggle-label">${lbl}</div>`;
+  }
+
+  let segs = '';
+  for(let i=0; i<8; i++) {
+    segs += `<div class="level-segment" style="${i<=lvl?'background:'+h.color:''}"></div>`;
+  }
+
+  el.innerHTML = `<div class="today-container">
+    <div class="habit-header">
+      <div class="habit-emoji">${h.emoji}</div>
+      <div class="habit-title">${h.name}</div>
+      <div class="habit-type">${formatType(h)}</div>
+    </div>
+
+    <div class="arc-container">
+      <svg class="arc-svg" width="200" height="200" viewBox="0 0 200 200">
+        <circle class="arc-track" cx="100" cy="100" r="${rad}" stroke-width="8"/>
+        <circle class="arc-value" cx="100" cy="100" r="${rad}" stroke-width="8"
+          stroke="${h.color}" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="0"/>
+      </svg>
+      <div class="arc-content">
+        <div class="arc-number" style="color:${h.color}">${r}</div>
+        <div class="arc-label">REPS</div>
+      </div>
+    </div>
+
+    <div class="action-area">${controls}</div>
+
+    <div class="journey-section">
+      <div class="journey-header">
+        <div class="journey-title">Level ${lvl+1} of 8</div>
+        <button class="edit-trigger" onclick="openHabitModal(true)">Edit Settings</button>
+      </div>
+      <div class="level-track">${segs}</div>
+      <div class="journey-text">${JOURNEY[Math.min(lvl, 7)]}</div>
+    </div>
+  </div>`;
+}
+
+function formatType(h) {
+  if (h.type==='daily') return 'Daily';
+  if (h.type==='multi') return `Multi (${h.dailyTarget||1}x)`;
+  if (h.type==='weekly') return `Weekly (${h.weeklyGoal||3}d)`;
+  if (h.type==='break') return 'Avoid';
+  return '';
+}
+
+function toggleDaily() {
+  const h = findHabit(currentHabitId);
+  if (!h) return;
+  const k = getTodayKey();
+  if (!h.log) h.log = {};
+  h.log[k] = !h.log[k];
+  refreshUI();
+  if (h.log[k]) testAch(h);
+  pushData(h);
+}
+
+function modifyMulti(dir) {
+  const h = findHabit(currentHabitId);
+  if (!h) return;
+  const k = getTodayKey();
+  if (!h.log) h.log = {};
+  let v = (h.log[k] || 0) + dir;
+  if (v < 0) v = 0;
+  h.log[k] = v;
+  refreshUI();
+  if (dir > 0) testAch(h);
+  pushData(h);
+}
+
+function drawCalendar(el, h) {
+  const y = calDate.getFullYear();
+  const m = calDate.getMonth();
+  const tk = getTodayKey();
+
+  const fd = new Date(y, m, 1).getDay();
+  const dim = new Date(y, m+1, 0).getDate();
+  const log = h.log || {};
+
+  const mn = calDate.toLocaleString('default', {month:'long', year:'numeric'});
+
+  let out = '';
+  const dws = ['S','M','T','W','T','F','S'];
+  out += dws.map(d => `<div class="day-label">${d}</div>`).join('');
+
+  for (let i=0; i<fd; i++) out += `<div class="day-cell empty"></div>`;
+
+  for (let d=1; d<=dim; d++) {
+    const k = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const fut = k > tk;
+    const tod = k === tk;
+    const val = log[k];
+
+    let c = 'day-cell';
+    let s = '';
+
+    if (fut) { c += ' future'; }
+    else if (h.type === 'multi') {
+      const tgt = h.dailyTarget || 1;
+      if (val >= tgt) { c += ' done'; s = `background:${h.color};`; }
+      else if (val > 0) { s = `background:${h.color}40;`; }
+      else if (!fut && k < tk) { c += ' missed'; }
+    } else {
+      if (val) { c += ' done'; s = `background:${h.color};`; }
+      else if (!fut && k < tk) { c += ' missed'; }
+    }
+
+    if (tod) c += ' today';
+    out += `<div class="${c}" style="${s}">${d}</div>`;
+  }
+
+  const td = Object.values(log).filter(v => v).length;
+  const str = getStreak(h);
+  const bs = getBestStreak(h);
+
+  el.innerHTML = `<div class="calendar-container">
+    <div class="calendar-header">
+      <button class="nav-btn" onclick="shiftMonth(-1)">&lt;</button>
+      <div class="month-label">${mn}</div>
+      <button class="nav-btn" onclick="shiftMonth(1)">&gt;</button>
+    </div>
+    <div class="calendar-grid">${out}</div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-value" style="color:${h.color}">${td}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color:${h.color}">${str}</div>
+        <div class="stat-label">Streak</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" style="color:${h.color}">${bs}</div>
+        <div class="stat-label">Best</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function shiftMonth(dir) { calDate.setMonth(calDate.getMonth()+dir); refreshUI(); }
+
+function getStreak(h) {
+  const log = h.log || {};
+  let s = 0;
+  const d = new Date(); 
+  while (true) {
+    const k = d.toISOString().slice(0,10);
+    if (log[k]) { s++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return s;
+}
+
+function getBestStreak(h) {
+  const log = h.log || {};
+  const dates = Object.keys(log).filter(k => log[k]).sort();
+  if (!dates.length) return 0;
+  let b = 1, c = 1;
+  for (let i=1; i<dates.length; i++) {
+    const p = new Date(dates[i-1]+'T00:00:00');
+    const n = new Date(dates[i]+'T00:00:00');
+    if ((n - p) / 86400000 === 1) { c++; b = Math.max(b, c); }
+    else c = 1;
+  }
+  return b;
+}
+
+function drawStats(el, h) {
+  const log = h.log || {};
+  const today = new Date();
+  let nodes = '';
+  for (let i=363; i>=0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate()-i);
+    const k = d.toISOString().slice(0,10);
+    const v = log[k];
+    let lvl = 0;
+    if (v) {
+      if (h.type==='multi') { const t=h.dailyTarget||1; lvl = v>=t?4:v>t/2?2:1; }
+      else lvl = 4;
+    }
+    nodes += `<div class="heat-node ${lvl?'lvl-'+lvl:''}" style="${lvl?'background:'+h.color:''}"></div>`;
+  }
+
+  const r = countTotal(h);
+  const g = h.goal || 60;
+  const pc = Math.round(Math.min(r/g,1)*100);
+  const s = getStreak(h);
+  const b = getBestStreak(h);
+  const dl = Object.values(log).filter(v=>v).length;
+
+  el.innerHTML = `<div class="stats-container">
+    <div style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary);margin-bottom:8px;">LAST 52 WEEKS</div>
+    <div class="heatmap-wrapper">${nodes}</div>
+
+    <div class="stats-grid" style="margin-bottom:12px">
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${r}</div><div class="stat-label">REPS</div></div>
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${pc}%</div><div class="stat-label">PROGRESS</div></div>
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${dl}</div><div class="stat-label">DAYS</div></div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${s}</div><div class="stat-label">STREAK</div></div>
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${b}</div><div class="stat-label">BEST</div></div>
+      <div class="stat-box"><div class="stat-value" style="color:${h.color}">${g-r>0?g-r:'0'}</div><div class="stat-label">LEFT</div></div>
+    </div>
+  </div>`;
+}
+
+function testAch(h) {
+  const r = countTotal(h);
+  for (const a of ACH_DATA) {
+    const k = `a_${h.id}_${a.reps}`;
+    if (r >= a.reps && !localStorage.getItem(k)) {
+      localStorage.setItem(k, '1');
+      popAch(a);
+      break;
+    }
+  }
+}
+
+function popAch(a) {
+  const el = document.getElementById('achCard');
+  document.getElementById('achIcon').textContent = a.icon;
+  document.getElementById('achTitle').textContent = a.title;
+  document.getElementById('achDesc').textContent = a.sub;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 3000);
+}
+
+function openHabitModal(isEdit = false) {
+  const h = isEdit ? findHabit(currentHabitId) : null;
+  editId = h ? h.id : null;
+  activeEmoji = h ? h.emoji : EMOJIS[0];
+  activeColor = h ? h.color : COLORS[0];
+  
+  document.getElementById('modalTitle').textContent = h ? 'Edit Habit' : 'New Habit';
+  document.getElementById('fName').value = h ? h.name : '';
+  document.getElementById('fType').value = h ? (h.type || 'daily') : 'daily';
+  document.getElementById('fGoal').value = h ? (h.goal || 60) : 60;
+  document.getElementById('fDelete').style.display = h ? 'block' : 'none';
+  
+  renderExtraFields(h);
+  buildSelectors();
+  
+  document.getElementById('habitModal').classList.add('active');
+}
+
+function buildSelectors() {
+  const er = document.getElementById('fEmoji');
+  er.innerHTML = EMOJIS.map(e => `<div class="selector-item ${e===activeEmoji?'selected':''}" onclick="setEmoji('${e}')">${e}</div>`).join('');
+  const cr = document.getElementById('fColor');
+  cr.innerHTML = COLORS.map(c => `<div class="selector-item ${c===activeColor?'selected':''}" onclick="setColor('${c}')"><div class="color-swatch" style="background:${c}"></div></div>`).join('');
+}
+
+function setEmoji(e) {
+  activeEmoji = e;
+  buildSelectors();
+}
+
+function setColor(c) {
+  activeColor = c;
+  buildSelectors();
+}
+
+function renderExtraFields(h) {
+  const t = document.getElementById('fType').value;
+  const ex = document.getElementById('fExtra');
+  if (t === 'multi') {
+    ex.innerHTML = `<div class="form-group">
+      <label class="form-label">Times per day</label>
+      <input class="form-control" id="fTarget" type="number" min="2" max="50" value="${h?.dailyTarget||3}">
+    </div>`;
+  } else if (t === 'weekly') {
+    ex.innerHTML = `<div class="form-group">
+      <label class="form-label">Days per week</label>
+      <input class="form-control" id="fTargetW" type="number" min="1" max="7" value="${h?.weeklyGoal||3}">
+    </div>`;
+  } else {
+    ex.innerHTML = '';
+  }
+}
+
+function processSave() {
+  const n = document.getElementById('fName').value.trim();
+  if (!n) { notify('Name required'); return; }
+  const t = document.getElementById('fType').value;
+  const g = parseInt(document.getElementById('fGoal').value) || 60;
+
+  const h = editId ? findHabit(editId) : {};
+  h.id = h.id || Date.now().toString();
+  h.name = n;
+  h.emoji = activeEmoji;
+  h.color = activeColor;
+  h.type = t;
+  h.goal = g;
+  if (t === 'multi') h.dailyTarget = parseInt(document.getElementById('fTarget')?.value) || 3;
+  if (t === 'weekly') h.weeklyGoal = parseInt(document.getElementById('fTargetW')?.value) || 3;
+  if (!h.log) h.log = {};
+  if (!h.createdAt) h.createdAt = new Date().toISOString();
+
+  if (!editId) habitData.push(h);
+  else {
+    const idx = habitData.findIndex(x => x.id === h.id);
+    if(idx > -1) habitData[idx] = h;
+  }
+  
+  currentHabitId = h.id;
+  closeHabitModal();
+  refreshUI();
+  pushData(h);
+}
+
+function processDelete() {
+  const ok = confirm('Delete habit?');
+  if (!ok) return;
+  const id = editId;
+  habitData = habitData.filter(x => x.id !== id);
+  currentHabitId = habitData[0]?.id || null;
+  closeHabitModal();
+  refreshUI();
+  dropData(id);
+}
+
+function closeHabitModal() { document.getElementById('habitModal').classList.remove('active'); }
+function checkModalClick(e) { if (e.target === document.getElementById('habitModal')) closeHabitModal(); }
+
+function pickHabit(id) {
+  currentHabitId = id;
+  closeMenu();
+  refreshUI();
+}
+
+function switchView(v, btn) {
+  activeView = v;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  refreshUI();
+}
+
+function openMenu() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebarMask').classList.add('active');
+}
+function closeMenu() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarMask').classList.remove('active');
+}
+
+function notify(m) {
+  const t = document.getElementById('toastMsg');
+  t.textContent = m;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 2000);
+}
+
+initApp();
+
+</script>
+</body>
+</html>
+
+
+```
