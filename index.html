@@ -96,6 +96,7 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 .day-cell{-webkit-user-select:none; user-select:none;}
 .bento-card{border-radius:2rem; box-shadow:0 10px 0 0 rgba(57,44,85,0.07), 0 18px 34px -14px rgba(57,44,85,0.16);}
 .sync-dot{transition:background .3s ease;}
+.diary-clamp{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
 </style>
 </head>
 <body class="bg-brand-bg text-brand-ink font-body h-screen w-screen overflow-hidden flex flex-col md:flex-row antialiased selection:bg-brand-purpleSoft">
@@ -134,16 +135,22 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
 </div>
 
 <div id="noteModal" class="modal-overlay fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-brand-ink/50 backdrop-blur-sm" onclick="closeModalOutside(event)">
-  <div class="modal-content sheet w-full md:w-[440px] bg-brand-panel p-7 md:rounded-4xl shadow-float safe-pb">
-    <div class="flex justify-between items-center mb-1">
+  <div class="modal-content sheet w-full md:w-[520px] bg-brand-panel p-6 md:p-7 md:rounded-4xl shadow-float safe-pb max-h-[88vh] flex flex-col">
+    <div class="flex justify-between items-center mb-1 shrink-0">
       <h2 class="font-display text-xl font-bold flex items-center gap-2"><i class="ph-fill ph-book-open-text text-brand-purple"></i> Quest Diary</h2>
-      <button onclick="closeNoteModal()" class="w-9 h-9 rounded-full hover:bg-brand-bg transition-colors flex items-center justify-center"><i class="ph-bold ph-x text-lg"></i></button>
+      <button onclick="closeNoteModal()" class="w-9 h-9 rounded-full hover:bg-brand-bg transition-colors flex items-center justify-center shrink-0"><i class="ph-bold ph-x text-lg"></i></button>
     </div>
-    <p id="noteDateLabel" class="text-xs font-extrabold uppercase tracking-wide text-brand-muted mb-4"></p>
-    <textarea id="noteText" rows="4" maxlength="400" placeholder="What happened today? Write a little diary note..." class="w-full bg-brand-bg border-2 border-brand-line rounded-2xl px-4 py-3 outline-none focus:border-brand-purple transition-colors resize-none text-sm font-semibold"></textarea>
-    <div class="flex gap-3 pt-4">
-      <button id="noteDeleteBtn" onclick="deleteNote()" class="hidden px-4 rounded-2xl bg-brand-redSoft text-brand-red hover:brightness-95 transition-colors flex items-center justify-center"><i class="ph-bold ph-trash text-lg"></i></button>
-      <button onclick="saveNote()" class="flex-1 bg-brand-purple text-white font-display font-bold py-3.5 rounded-2xl shadow-pop active:translate-y-1 active:shadow-none transition-all">Save diary entry</button>
+    <div class="flex-1 overflow-y-auto no-scrollbar pt-3">
+      <p id="noteDateLabel" class="text-xs font-extrabold uppercase tracking-wide text-brand-purple mb-2"></p>
+      <textarea id="noteText" rows="4" maxlength="400" placeholder="What happened today? Write a little diary note..." class="w-full bg-brand-bg border-2 border-brand-line rounded-2xl px-4 py-3 outline-none focus:border-brand-purple transition-colors resize-none text-sm font-semibold"></textarea>
+      <div class="flex gap-3 pt-4 pb-5">
+        <button id="noteDeleteBtn" onclick="deleteNote()" class="hidden px-4 rounded-2xl bg-brand-redSoft text-brand-red hover:brightness-95 transition-colors flex items-center justify-center"><i class="ph-bold ph-trash text-lg"></i></button>
+        <button onclick="saveNote()" class="flex-1 bg-brand-purple text-white font-display font-bold py-3.5 rounded-2xl shadow-pop active:translate-y-1 active:shadow-none transition-all">Save diary entry</button>
+      </div>
+      <div class="border-t-2 border-brand-line pt-4">
+        <div class="text-xs font-display font-extrabold uppercase tracking-wide text-brand-muted mb-2.5 flex items-center gap-1.5"><i class="ph-fill ph-clock-counter-clockwise"></i> Past entries</div>
+        <div id="diaryHistoryList" class="space-y-2"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -239,55 +246,55 @@ input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-o
   </div>
 </div>
 
-<aside class="hidden md:flex flex-col md:w-24 lg:w-80 bg-brand-panel border-r-2 border-brand-line h-full z-20 shrink-0 transition-all">
-  <div class="p-4 lg:p-6 flex items-center gap-3 justify-center lg:justify-start">
-    <div class="w-12 h-12 rounded-2xl bg-brand-purple flex items-center justify-center text-white text-2xl shrink-0 shadow-pop animate-float">
+<aside class="hidden md:flex flex-col md:w-[68px] lg:w-60 bg-brand-panel border-r-2 border-brand-line h-full z-20 shrink-0 transition-all">
+  <div class="p-3 lg:p-4 flex items-center gap-2.5 justify-center lg:justify-start">
+    <div class="w-9 h-9 rounded-xl bg-brand-purple flex items-center justify-center text-white text-lg shrink-0 shadow-pop">
       <i class="ph-fill ph-compass-tool"></i>
     </div>
-    <span class="hidden lg:inline font-display font-bold text-2xl tracking-tight">Trailmark</span>
+    <span class="hidden lg:inline font-display font-bold text-lg tracking-tight">Trailmark</span>
   </div>
-  <div class="px-3 lg:px-4 pb-4">
-    <button onclick="openAddModal()" class="w-full py-3.5 border-4 border-dashed border-brand-line rounded-2xl text-brand-muted font-display font-bold hover:border-brand-purple hover:text-brand-purple transition-all flex items-center justify-center gap-2">
-      <i class="ph-bold ph-plus text-lg"></i> <span class="hidden lg:inline">New quest</span>
+  <div class="px-2.5 lg:px-3 pb-3">
+    <button onclick="openAddModal()" class="w-full py-2.5 border-[3px] border-dashed border-brand-line rounded-2xl text-brand-muted font-display font-bold text-sm hover:border-brand-purple hover:text-brand-purple transition-all flex items-center justify-center gap-1.5">
+      <i class="ph-bold ph-plus"></i> <span class="hidden lg:inline">New quest</span>
     </button>
   </div>
-  <div id="habitListDesktop" class="flex-1 overflow-y-auto no-scrollbar px-3 lg:px-4 space-y-1.5 pb-6">
-    <div class="animate-pulse space-y-3">
-      <div class="h-16 bg-brand-bg rounded-2xl"></div>
-      <div class="h-16 bg-brand-bg rounded-2xl"></div>
-      <div class="h-16 bg-brand-bg rounded-2xl"></div>
+  <div id="habitListDesktop" class="flex-1 overflow-y-auto no-scrollbar px-2.5 lg:px-3 space-y-1 pb-4">
+    <div class="animate-pulse space-y-2.5">
+      <div class="h-12 bg-brand-bg rounded-2xl"></div>
+      <div class="h-12 bg-brand-bg rounded-2xl"></div>
+      <div class="h-12 bg-brand-bg rounded-2xl"></div>
     </div>
   </div>
-  <div id="sidebarSync" class="mx-3 lg:mx-4 mb-3 p-3 rounded-2xl bg-brand-bg border-2 border-brand-line flex items-center gap-2.5 cursor-pointer hover:bg-brand-sunken transition-colors" onclick="forceSync()">
-    <div id="connDot2" class="sync-dot w-2.5 h-2.5 rounded-full bg-brand-green shrink-0"></div>
-    <div id="connLabel2" class="text-xs font-display font-bold flex-1 min-w-0 truncate hidden lg:block">Synced</div>
-    <i id="forceSyncIcon2" class="ph-bold ph-arrows-clockwise text-brand-muted shrink-0"></i>
+  <div id="sidebarSync" class="mx-2.5 lg:mx-3 mb-2.5 p-2.5 rounded-2xl bg-brand-bg border-2 border-brand-line flex items-center gap-2 cursor-pointer hover:bg-brand-sunken transition-colors" onclick="forceSync()">
+    <div id="connDot2" class="sync-dot w-2 h-2 rounded-full bg-brand-green shrink-0"></div>
+    <div id="connLabel2" class="text-[11px] font-display font-bold flex-1 min-w-0 truncate hidden lg:block">Synced</div>
+    <i id="forceSyncIcon2" class="ph-bold ph-arrows-clockwise text-brand-muted shrink-0 text-sm"></i>
   </div>
-  <div class="p-3 lg:p-4 border-t-2 border-brand-line">
-    <button onclick="openSettingsModal()" class="w-full py-3 flex items-center justify-center lg:justify-start gap-3 text-brand-muted hover:text-brand-ink transition-colors font-display font-bold rounded-2xl hover:bg-brand-bg px-2 lg:px-4">
-      <i class="ph-fill ph-gear-six text-lg"></i> <span class="hidden lg:inline">Settings</span>
+  <div class="p-2.5 lg:p-3 border-t-2 border-brand-line">
+    <button onclick="openSettingsModal()" class="w-full py-2.5 flex items-center justify-center lg:justify-start gap-2.5 text-brand-muted hover:text-brand-ink transition-colors font-display font-bold text-sm rounded-2xl hover:bg-brand-bg px-2 lg:px-3">
+      <i class="ph-fill ph-gear-six"></i> <span class="hidden lg:inline">Settings</span>
     </button>
   </div>
 </aside>
 
 <main class="flex-1 flex flex-col h-full relative z-10 w-full overflow-hidden">
   <header class="bg-brand-panel/90 backdrop-blur-xl border-b-2 border-brand-line safe-pt sticky top-0 z-30">
-    <div id="mobileStrip" class="md:hidden flex overflow-x-auto no-scrollbar px-4 py-3 gap-4 snap-x border-b-2 border-brand-line"></div>
-    <div class="px-4 md:px-6 py-3 md:py-4 flex items-center justify-between gap-2 md:gap-3">
-      <div id="datePill" class="font-display font-bold text-xs md:text-sm bg-brand-bg px-3 md:px-4 py-2 rounded-full flex items-center gap-2 shrink-0 border-2 border-brand-line">
+    <div id="mobileStrip" class="md:hidden flex overflow-x-auto no-scrollbar px-3 py-2 gap-2.5 snap-x border-b-2 border-brand-line"></div>
+    <div class="px-3 md:px-4 lg:px-5 py-2 flex items-center justify-between gap-2 md:gap-3">
+      <div id="datePill" class="font-display font-bold text-[11px] md:text-xs bg-brand-bg px-2.5 md:px-3 py-1.5 rounded-full flex items-center gap-1.5 shrink-0 border-2 border-brand-line">
         <i class="ph-fill ph-sun text-brand-yellow"></i> <span></span>
       </div>
-      <div id="tabBar" class="flex bg-brand-bg p-1 rounded-full border-2 border-brand-line overflow-x-auto no-scrollbar">
-        <button onclick="setView('today', this)" data-view="today" class="tab-pill active px-3 md:px-5 py-2 rounded-full text-xs md:text-sm font-display font-bold transition-all whitespace-nowrap">Today</button>
-        <button onclick="setView('calendar', this)" data-view="calendar" class="tab-pill px-3 md:px-5 py-2 rounded-full text-xs md:text-sm font-display font-bold transition-all whitespace-nowrap">Calendar</button>
-        <button onclick="setView('stats', this)" data-view="stats" class="tab-pill px-3 md:px-5 py-2 rounded-full text-xs md:text-sm font-display font-bold transition-all whitespace-nowrap">Stats</button>
-        <button onclick="setView('insights', this)" data-view="insights" class="tab-pill px-3 md:px-5 py-2 rounded-full text-xs md:text-sm font-display font-bold transition-all whitespace-nowrap">Insights</button>
+      <div id="tabBar" class="hidden md:flex bg-brand-bg p-1 rounded-full border-2 border-brand-line overflow-x-auto no-scrollbar">
+        <button onclick="setView('today', this)" data-view="today" class="tab-pill active px-3.5 py-1.5 rounded-full text-xs md:text-[13px] font-display font-bold transition-all whitespace-nowrap">Today</button>
+        <button onclick="setView('calendar', this)" data-view="calendar" class="tab-pill px-3.5 py-1.5 rounded-full text-xs md:text-[13px] font-display font-bold transition-all whitespace-nowrap">Calendar</button>
+        <button onclick="setView('stats', this)" data-view="stats" class="tab-pill px-3.5 py-1.5 rounded-full text-xs md:text-[13px] font-display font-bold transition-all whitespace-nowrap">Stats</button>
+        <button onclick="setView('insights', this)" data-view="insights" class="tab-pill px-3.5 py-1.5 rounded-full text-xs md:text-[13px] font-display font-bold transition-all whitespace-nowrap">Insights</button>
       </div>
-      <button class="md:hidden w-10 h-10 rounded-full flex items-center justify-center bg-brand-bg text-brand-muted shrink-0 border-2 border-brand-line" onclick="openSettingsModal()"><i class="ph-bold ph-gear-six"></i></button>
+      <button class="md:hidden w-9 h-9 rounded-full flex items-center justify-center bg-brand-bg text-brand-muted shrink-0 border-2 border-brand-line" onclick="openSettingsModal()"><i class="ph-bold ph-gear-six"></i></button>
     </div>
   </header>
 
-  <div id="content" class="flex-1 overflow-y-auto no-scrollbar p-4 sm:p-6 md:p-8 lg:p-10 pb-28 md:pb-10 relative scroll-smooth">
+  <div id="content" class="flex-1 overflow-y-auto no-scrollbar p-3.5 sm:p-5 md:p-6 lg:p-8 pb-28 md:pb-8 relative scroll-smooth">
     <div class="flex flex-col items-center justify-center h-full gap-8 animate-pulse">
       <div class="w-56 h-56 md:w-64 md:h-64 rounded-[3rem] bg-brand-sunken"></div>
       <div class="w-32 h-12 rounded-full bg-brand-sunken"></div>
@@ -716,14 +723,14 @@ function renderSidebar() {
     const opacity = status === true ? 'opacity-50' : 'opacity-100';
     const activeClass = isActive ? 'bg-brand-bg border-brand-line shadow-pop scale-[1.02]' : 'border-transparent hover:bg-brand-bg/60';
     const isDirty = dirtyIds.has(h.id);
-    return `<div class="group flex items-center gap-3 p-2.5 lg:p-3 rounded-2xl cursor-pointer border-2 transition-all justify-center lg:justify-start ${activeClass} ${opacity}" onclick="selectHabit('${h.id}')" title="${h.name.replace(/"/g,'')}">
-      <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-brand-panel shadow-pop shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-6 relative border-2 border-brand-line">${h.emoji}
-        ${status==='skip'||status==='shield'?`<span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full ${status==='shield'?'bg-brand-shield':'bg-brand-orange'} text-white text-[10px] flex items-center justify-center border-2 border-brand-panel"><i class="ph-bold ${status==='shield'?'ph-shield-check':'ph-fast-forward'}"></i></span>`:''}
-        ${isDirty?`<span class="absolute -bottom-1 -left-1 w-3.5 h-3.5 rounded-full bg-brand-red border-2 border-brand-panel"></span>`:''}
+    return `<div class="group flex items-center gap-2.5 p-2 rounded-2xl cursor-pointer border-2 transition-all justify-center lg:justify-start ${activeClass} ${opacity}" onclick="selectHabit('${h.id}')" title="${h.name.replace(/"/g,'')}">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg bg-brand-panel shadow-pop shrink-0 transition-transform group-hover:scale-110 group-hover:rotate-6 relative border-2 border-brand-line">${h.emoji}
+        ${status==='skip'||status==='shield'?`<span class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full ${status==='shield'?'bg-brand-shield':'bg-brand-orange'} text-white text-[9px] flex items-center justify-center border-2 border-brand-panel"><i class="ph-bold ${status==='shield'?'ph-shield-check':'ph-fast-forward'}"></i></span>`:''}
+        ${isDirty?`<span class="absolute -bottom-1 -left-1 w-3 h-3 rounded-full bg-brand-red border-2 border-brand-panel"></span>`:''}
       </div>
       <div class="flex-1 min-w-0 hidden lg:block">
-        <div class="font-display font-bold text-sm truncate mb-1.5">${h.name}</div>
-        <div class="h-2 w-full bg-brand-line rounded-full overflow-hidden">
+        <div class="font-display font-bold text-[13px] truncate mb-1">${h.name}</div>
+        <div class="h-1.5 w-full bg-brand-line rounded-full overflow-hidden">
           <div class="h-full rounded-full transition-all duration-700 ease-out" style="width:${pct}%;background:${h.color}"></div>
         </div>
       </div>
@@ -750,9 +757,9 @@ function renderMobileStrip() {
     const status = isCheckedToday(h);
     const op = status === true ? 'opacity-50' : 'opacity-100';
     const activeCls = isActive ? 'scale-110' : 'scale-95 opacity-70';
-    return `<div class="flex flex-col items-center gap-1.5 snap-start transition-all cursor-pointer ${activeCls} ${op}" onclick="selectHabit('${h.id}')">
-      <div class="w-14 h-14 rounded-full flex items-center justify-center text-2xl bg-brand-panel shadow-pop border-[3px] relative ${isActive ? 'border-brand-purple' : 'border-brand-line'}">${h.emoji}${status==='shield'?`<span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-brand-shield text-white text-[9px] flex items-center justify-center border-2 border-brand-panel"><i class="ph-bold ph-shield-check"></i></span>`:''}</div>
-      <div class="w-1.5 h-1.5 rounded-full" style="background:${isActive ? h.color : 'transparent'}"></div>
+    return `<div class="flex flex-col items-center gap-1 snap-start transition-all cursor-pointer ${activeCls} ${op}" onclick="selectHabit('${h.id}')">
+      <div class="w-11 h-11 rounded-full flex items-center justify-center text-lg bg-brand-panel shadow-pop border-2 relative ${isActive ? 'border-brand-purple' : 'border-brand-line'}">${h.emoji}${status==='shield'?`<span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-brand-shield text-white text-[8px] flex items-center justify-center border-2 border-brand-panel"><i class="ph-bold ph-shield-check"></i></span>`:''}</div>
+      <div class="w-1 h-1 rounded-full" style="background:${isActive ? h.color : 'transparent'}"></div>
     </div>`;
   }).join('');
   const activeEl = strip.querySelector('.scale-110');
@@ -1073,8 +1080,55 @@ function openNoteModal(dateStr) {
   document.getElementById('noteText').value = h.notes?.[dateStr] || '';
   document.getElementById('noteDeleteBtn').classList.toggle('hidden', !h.notes?.[dateStr]);
   document.getElementById('noteModal').classList.add('open');
+  renderDiaryHistory();
 }
 function closeNoteModal() { document.getElementById('noteModal').classList.remove('open'); notesEditingDate = null; }
+
+function getSortedNotes(h) { return Object.entries(h.notes || {}).sort((a,b) => b[0].localeCompare(a[0])); }
+
+function renderDiaryHistory() {
+  const h = getHabit(activeId);
+  const list = document.getElementById('diaryHistoryList');
+  if (!h || !list) return;
+  const entries = getSortedNotes(h);
+  if (!entries.length) { list.innerHTML = `<div class="text-xs font-bold text-brand-muted text-center py-6">No diary entries yet. Write your first one above!</div>`; return; }
+  const thisYear = new Date().getFullYear();
+  list.innerHTML = entries.map(([date, text]) => {
+    const d = new Date(date + 'T00:00:00');
+    const label = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year: d.getFullYear()!==thisYear ? 'numeric' : undefined });
+    const isCurrent = date === notesEditingDate;
+    return `<div class="group flex items-start gap-2 p-3 rounded-2xl border-2 ${isCurrent?'border-brand-purple bg-brand-purpleSoft':'border-brand-line bg-brand-bg'} cursor-pointer transition-all hover:border-brand-purple" onclick="selectDiaryDate('${date}')">
+      <div class="flex-1 min-w-0">
+        <div class="text-[10px] font-display font-extrabold uppercase tracking-wide text-brand-muted mb-0.5">${label}${date===todayKey()?' · Today':''}</div>
+        <div class="text-xs font-bold text-brand-ink diary-clamp">${text.replace(/</g,'&lt;')}</div>
+      </div>
+      <button onclick="event.stopPropagation(); deleteHistoryEntry('${date}')" class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-brand-muted hover:bg-brand-redSoft hover:text-brand-red transition-colors"><i class="ph-bold ph-x text-xs"></i></button>
+    </div>`;
+  }).join('');
+}
+
+function selectDiaryDate(dateStr) {
+  const h = getHabit(activeId);
+  if (!h) return;
+  notesEditingDate = dateStr;
+  const d = new Date(dateStr + 'T00:00:00');
+  document.getElementById('noteDateLabel').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  document.getElementById('noteText').value = h.notes?.[dateStr] || '';
+  document.getElementById('noteDeleteBtn').classList.toggle('hidden', !h.notes?.[dateStr]);
+  haptic(10);
+  renderDiaryHistory();
+}
+
+function deleteHistoryEntry(dateStr) {
+  const h = getHabit(activeId);
+  if (!h || !h.notes) return;
+  delete h.notes[dateStr];
+  if (notesEditingDate === dateStr) { document.getElementById('noteText').value = ''; document.getElementById('noteDeleteBtn').classList.add('hidden'); }
+  haptic(15);
+  renderDiaryHistory();
+  renderAll();
+  syncHabitToCloud(h);
+}
 
 function saveNote() {
   const h = getHabit(activeId);
@@ -1082,7 +1136,7 @@ function saveNote() {
   const text = document.getElementById('noteText').value.trim();
   if (!h.notes) h.notes = {};
   if (text) h.notes[notesEditingDate] = text; else delete h.notes[notesEditingDate];
-  closeNoteModal();
+  renderDiaryHistory();
   renderAll();
   showToast('Diary entry saved!');
   syncHabitToCloud(h);
@@ -1092,7 +1146,9 @@ function deleteNote() {
   const h = getHabit(activeId);
   if (!h || !notesEditingDate || !h.notes) return;
   delete h.notes[notesEditingDate];
-  closeNoteModal();
+  document.getElementById('noteText').value = '';
+  document.getElementById('noteDeleteBtn').classList.add('hidden');
+  renderDiaryHistory();
   renderAll();
   showToast('Diary entry removed');
   syncHabitToCloud(h);
