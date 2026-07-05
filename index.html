@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trailmark">
+<meta name="mobile-web-app-capable" content="yes">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght=400;500;600;700&family=Nunito:wght=400;600;700;800;900&family=JetBrains+Mono:wght=600;700&display=swap" rel="stylesheet">
@@ -47,26 +48,56 @@ tailwind.config = {
 }
 </script>
 <style>
-* { -webkit-tap-highlight-color: transparent; outline: none !important; }
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --app-height: 100vh;
+}
+* { -webkit-tap-highlight-color: transparent; outline: none !important; box-sizing: border-box; }
 html, body {
   background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
   background-attachment: fixed;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 body {
   font-family: 'Nunito', sans-serif;
   overscroll-behavior-y: none;
   color: #2D1F47;
+  height: 100vh;
+  height: var(--app-height);
+  height: 100dvh;
 }
 .font-display { font-family: 'Fredoka', sans-serif; }
 .font-num { font-family: 'Fredoka', sans-serif; font-variant-numeric: tabular-nums; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-.safe-pb { padding-bottom: env(safe-area-inset-bottom, 16px); }
-.safe-pt { padding-top: env(safe-area-inset-top, 16px); }
+
+.safe-pt { padding-top: calc(var(--sat) + 1rem) !important; }
+.safe-pb { padding-bottom: calc(var(--sab) + 1.5rem) !important; }
+@media (max-width: 767px) {
+  .safe-pl { padding-left: calc(var(--sal) + 1rem) !important; }
+  .safe-pr { padding-right: calc(var(--sar) + 1rem) !important; }
+}
+.safe-pt-sm { padding-top: calc(var(--sat) + 0.5rem) !important; }
+.safe-pb-sm { padding-bottom: calc(var(--sab) + 0.5rem) !important; }
+.safe-pb-nav { padding-bottom: calc(var(--sab) + 0.5rem) !important; }
+.safe-mt { margin-top: var(--sat) !important; }
+.safe-mb { margin-bottom: var(--sab) !important; }
+
+#toast { bottom: calc(var(--sab) + 6rem); }
+#achievement { top: calc(var(--sat) + 6rem); }
+@media (min-width: 768px) {
+  #toast { bottom: calc(var(--sab) + 2rem); }
+  #achievement { top: calc(var(--sat) + 2rem); }
+}
+
 button, a, [role="button"] { touch-action: manipulation; }
+button, a, [role="button"], input, select, textarea { -webkit-user-select: none; user-select: none; }
+input, textarea { -webkit-user-select: text; user-select: text; }
 .bubble-bg {
   position: absolute;
   border-radius: 50%;
@@ -315,8 +346,8 @@ button, a, [role="button"] { touch-action: manipulation; }
   </div>
 </div>
 
-<aside id="sidebar" class="glass-panel fixed md:sticky top-0 left-0 h-screen z-40 flex flex-col w-64 md:w-64 transition-all duration-300 transform -translate-x-full md:translate-x-0 overflow-hidden shrink-0">
-  <div class="p-4 flex items-center justify-between border-b-2 border-white/40">
+<aside id="sidebar" class="glass-panel fixed md:sticky top-0 left-0 h-screen z-[45] flex flex-col w-64 md:w-64 transition-all duration-300 transform -translate-x-full md:translate-x-0 overflow-hidden shrink-0 safe-pl">
+  <div class="p-4 md:pt-4 flex items-center justify-between border-b-2 border-white/40 safe-pt-sm">
     <div class="flex items-center gap-3">
       <div class="w-11 h-11 rounded-2xl bg-brand-purple text-white flex items-center justify-center text-xl shadow-md animate-float">
         <i class="ph-fill ph-compass-tool"></i>
@@ -348,7 +379,7 @@ button, a, [role="button"] { touch-action: manipulation; }
 <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-brand-ink/20 backdrop-blur-xs z-30 opacity-0 pointer-events-none transition-opacity md:hidden"></div>
 
 <main class="flex-1 flex flex-col h-screen w-full overflow-hidden relative">
-  <div id="adfTopBar" class="w-full z-40 p-4 md:p-6 shrink-0 safe-pt">
+  <div id="adfTopBar" class="w-full z-40 p-4 md:p-6 shrink-0 safe-pt safe-pl safe-pr">
     <div class="glass-card rounded-3xl px-4 py-3 flex items-center justify-between gap-4 border border-white">
       <button onclick="toggleSidebar()" class="md:hidden w-11 h-11 rounded-2xl bg-white/60 flex items-center justify-center text-brand-ink shadow-sm bouncy-btn">
         <i class="ph-bold ph-list text-xl"></i>
@@ -371,13 +402,13 @@ button, a, [role="button"] { touch-action: manipulation; }
     </div>
   </div>
 
-  <div id="mobileStripWrapper" class="md:hidden w-full px-4 pb-3 z-20 shrink-0">
+  <div id="mobileStripWrapper" class="md:hidden w-full px-4 pb-3 z-20 shrink-0 safe-pl safe-pr">
     <div id="mobileStrip" class="flex overflow-x-auto no-scrollbar py-1 gap-3 snap-x"></div>
   </div>
 
   <div id="content" class="flex-1 overflow-y-auto no-scrollbar px-4 md:px-6 pb-28 md:pb-6 relative scroll-smooth"></div>
 
-  <nav class="md:hidden fixed bottom-5 left-4 right-4 bg-white/60 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-float z-30 flex justify-around items-center py-2 px-3 safe-pb">
+  <nav class="md:hidden fixed left-4 right-4 bg-white/60 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-float z-30 flex justify-around items-center py-2 px-3 safe-pb-nav" style="bottom: calc(var(--sab) + 1.25rem);">
     <button onclick="setView('today', null, this)" data-view="today" class="nav-item active flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
       <i class="ph-fill ph-sun-horizon nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Today</span>
     </button>
@@ -396,12 +427,12 @@ button, a, [role="button"] { touch-action: manipulation; }
   </nav>
 </main>
 
-<div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-brand-ink/90 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-base shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[70] translate-y-4 max-w-[92vw] border border-white/20">
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bg-brand-ink/90 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-base shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[70] translate-y-4 max-w-[92vw] border border-white/20">
   <i class="ph-fill ph-sparkle text-xl text-brand-yellow animate-bounce"></i> <span id="toastMsg" class="truncate"></span>
   <button id="toastAction" class="hidden ml-2 bg-white/20 px-3 py-1 rounded-full text-xs hover:scale-105 transition-all shrink-0 bouncy-btn" onclick="handleUndo()">Undo</button>
 </div>
 
-<div id="achievement" class="fixed top-24 md:top-8 right-4 md:right-8 left-4 md:left-auto bg-white/90 backdrop-blur-2xl border-2 border-white p-4 rounded-3xl shadow-float flex items-center gap-4 transition-all duration-500 translate-x-[160%] z-[70] md:max-w-sm">
+<div id="achievement" class="fixed right-4 md:right-8 left-4 md:left-auto bg-white/90 backdrop-blur-2xl border-2 border-white p-4 rounded-3xl shadow-float flex items-center gap-4 transition-all duration-500 translate-x-[160%] z-[70] md:max-w-sm">
   <div id="achIcon" class="text-5xl drop-shadow-md shrink-0 animate-wiggle">🏆</div>
   <div>
     <div id="achTitle" class="font-display font-bold text-xl leading-tight text-brand-purple mb-0.5"></div>
@@ -1312,6 +1343,17 @@ function promptResetKeys() {
 
 window.addEventListener('online', () => setSyncStatus('synced'));
 window.addEventListener('offline', () => setSyncStatus('offline'));
+
+function setAppHeight() {
+  const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', h + 'px');
+}
+setAppHeight();
+window.addEventListener('resize', setAppHeight);
+window.addEventListener('orientationchange', setAppHeight);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', setAppHeight);
+}
 
 window.onload = () => {
   checkSetup();
