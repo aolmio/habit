@@ -53,46 +53,38 @@ tailwind.config = {
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
-  --app-height: 100vh;
 }
 * { -webkit-tap-highlight-color: transparent; outline: none !important; box-sizing: border-box; }
 html, body {
   background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
   background-attachment: fixed;
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
 }
 body {
   font-family: 'Nunito', sans-serif;
   overscroll-behavior-y: none;
   color: #2D1F47;
-  height: 100vh;
-  height: var(--app-height);
-  height: 100dvh;
 }
 .font-display { font-family: 'Fredoka', sans-serif; }
 .font-num { font-family: 'Fredoka', sans-serif; font-variant-numeric: tabular-nums; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-.safe-pt { padding-top: calc(var(--sat) + 1rem) !important; }
-.safe-pb { padding-bottom: calc(var(--sab) + 1.5rem) !important; }
-@media (max-width: 767px) {
-  .safe-pl { padding-left: calc(var(--sal) + 1rem) !important; }
-  .safe-pr { padding-right: calc(var(--sar) + 1rem) !important; }
-}
-.safe-pt-sm { padding-top: calc(var(--sat) + 0.5rem) !important; }
-.safe-pb-sm { padding-bottom: calc(var(--sab) + 0.5rem) !important; }
-.safe-pb-nav { padding-bottom: calc(var(--sab) + 0.5rem) !important; }
-.safe-mt { margin-top: var(--sat) !important; }
-.safe-mb { margin-bottom: var(--sab) !important; }
+.safe-pb { padding-bottom: env(safe-area-inset-bottom, 16px); }
 
-#toast { bottom: calc(var(--sab) + 6rem); }
-#achievement { top: calc(var(--sat) + 6rem); }
-@media (min-width: 768px) {
-  #toast { bottom: calc(var(--sab) + 2rem); }
-  #achievement { top: calc(var(--sat) + 2rem); }
+@supports (-webkit-touch-callout: none) {
+  .safe-pt { padding-top: calc(var(--sat) + 1rem) !important; }
+  .safe-pt-sm { padding-top: calc(var(--sat) + 0.5rem) !important; }
+  @media (max-width: 767px) {
+    .safe-pl { padding-left: calc(var(--sal) + 1rem) !important; }
+    .safe-pr { padding-right: calc(var(--sar) + 1rem) !important; }
+  }
+  #achievement { top: calc(var(--sat) + 6rem); }
+  @media (min-width: 768px) {
+    #achievement { top: calc(var(--sat) + 2rem); }
+  }
 }
 
 button, a, [role="button"] { touch-action: manipulation; }
@@ -376,7 +368,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
   </div>
 </aside>
 
-<div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-brand-ink/20 backdrop-blur-xs z-30 opacity-0 pointer-events-none transition-opacity md:hidden"></div>
+<div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-brand-ink/20 backdrop-blur-xs z-[35] opacity-0 pointer-events-none transition-opacity md:hidden"></div>
 
 <main class="flex-1 flex flex-col h-screen w-full overflow-hidden relative">
   <div id="adfTopBar" class="w-full z-40 p-4 md:p-6 shrink-0 safe-pt safe-pl safe-pr">
@@ -408,7 +400,7 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 
   <div id="content" class="flex-1 overflow-y-auto no-scrollbar px-4 md:px-6 pb-28 md:pb-6 relative scroll-smooth"></div>
 
-  <nav class="md:hidden fixed left-4 right-4 bg-white/60 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-float z-30 flex justify-around items-center py-2 px-3 safe-pb-nav" style="bottom: calc(var(--sab) + 1.25rem);">
+  <nav class="md:hidden fixed bottom-5 left-4 right-4 bg-white/60 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-float z-30 flex justify-around items-center py-2 px-3 safe-pb">
     <button onclick="setView('today', null, this)" data-view="today" class="nav-item active flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
       <i class="ph-fill ph-sun-horizon nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Today</span>
     </button>
@@ -427,12 +419,12 @@ input, textarea { -webkit-user-select: text; user-select: text; }
   </nav>
 </main>
 
-<div id="toast" class="fixed left-1/2 -translate-x-1/2 bg-brand-ink/90 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-base shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[70] translate-y-4 max-w-[92vw] border border-white/20">
+<div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-brand-ink/90 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-base shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[70] translate-y-4 max-w-[92vw] border border-white/20">
   <i class="ph-fill ph-sparkle text-xl text-brand-yellow animate-bounce"></i> <span id="toastMsg" class="truncate"></span>
   <button id="toastAction" class="hidden ml-2 bg-white/20 px-3 py-1 rounded-full text-xs hover:scale-105 transition-all shrink-0 bouncy-btn" onclick="handleUndo()">Undo</button>
 </div>
 
-<div id="achievement" class="fixed right-4 md:right-8 left-4 md:left-auto bg-white/90 backdrop-blur-2xl border-2 border-white p-4 rounded-3xl shadow-float flex items-center gap-4 transition-all duration-500 translate-x-[160%] z-[70] md:max-w-sm">
+<div id="achievement" class="fixed top-24 md:top-8 right-4 md:right-8 left-4 md:left-auto bg-white/90 backdrop-blur-2xl border-2 border-white p-4 rounded-3xl shadow-float flex items-center gap-4 transition-all duration-500 translate-x-[160%] z-[70] md:max-w-sm">
   <div id="achIcon" class="text-5xl drop-shadow-md shrink-0 animate-wiggle">🏆</div>
   <div>
     <div id="achTitle" class="font-display font-bold text-xl leading-tight text-brand-purple mb-0.5"></div>
@@ -471,6 +463,53 @@ let notesEditingDate = null;
 let syncState = 'idle';
 let dirtyIds = new Set();
 let dirtyDeletes = [];
+
+function loadProfile() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('heroProfile') || 'null');
+    if (saved && typeof saved.xp === 'number') return saved;
+  } catch (e) {}
+  return { xp: 0, initialized: false };
+}
+let profile = loadProfile();
+
+function saveProfile() {
+  try { localStorage.setItem('heroProfile', JSON.stringify(profile)); } catch (e) {}
+}
+
+function addXp(amount) {
+  profile.xp = Math.max(0, (profile.xp || 0) + amount);
+  saveProfile();
+  updateXpWidgets();
+}
+
+function getLevelInfo() {
+  const xp = profile.xp || 0;
+  const perLevel = 50;
+  const level = Math.floor(xp / perLevel) + 1;
+  const xpIntoLevel = xp % perLevel;
+  const pct = Math.round((xpIntoLevel / perLevel) * 100);
+  return { level, xp, xpIntoLevel, xpForNext: perLevel, pct };
+}
+
+function ensureProfileInitialized() {
+  if (profile.initialized) return;
+  let totalCompletions = 0;
+  habits.forEach(h => {
+    if (h.type === 'break') return;
+    totalCompletions += Object.keys(h.log || {}).filter(k => {
+      const v = h.log[k];
+      return typeof v === 'number' ? v > 0 : v === true;
+    }).length;
+  });
+  profile.xp = Math.max(profile.xp || 0, totalCompletions * 10);
+  profile.initialized = true;
+  saveProfile();
+}
+
+function updateXpWidgets() {
+  if (currentView === 'stats') renderContent();
+}
 
 const haptic = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
 
@@ -556,8 +595,46 @@ async function loadDataFromCloud() {
   if (habits.length > 0 && !activeId) activeId = habits[0].id;
   dirtyIds.clear();
   dirtyDeletes = [];
+  ensureProfileInitialized();
+  runDailyCheckIn();
   renderAll();
   setSyncStatus('synced');
+}
+
+function formatDateLocal(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function runDailyCheckIn() {
+  const todayStr = getTodayStr();
+  const lastCheckIn = localStorage.getItem('lastCheckInDate');
+  if (lastCheckIn === todayStr) return;
+  localStorage.setItem('lastCheckInDate', todayStr);
+
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = formatDateLocal(yesterday);
+  const twoDaysAgo = new Date();
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  const twoStr = formatDateLocal(twoDaysAgo);
+
+  let shieldsUsed = 0;
+  habits.forEach(h => {
+    if (h.type === 'break') return;
+    if (!h.log) h.log = {};
+    const missedYesterday = !h.log[yStr];
+    const wasOnStreak = !!h.log[twoStr];
+    if (missedYesterday && wasOnStreak && (h.shieldBank || 0) > 0) {
+      h.log[yStr] = 'shield';
+      h.shieldBank = (h.shieldBank || 0) - 1;
+      shieldsUsed++;
+      syncHabitToCloud(h);
+    }
+  });
+
+  if (shieldsUsed > 0) {
+    showToast('Shield Saved Your Streak! 🛡️');
+  }
 }
 
 function setSyncStatus(state) {
@@ -792,6 +869,16 @@ function renderTodayView(h, content) {
         </div>
       </div>
     `;
+  } else if (h.type === 'break') {
+    const isBroken = isDone;
+    actionBlock = `
+      <div class="flex flex-col items-center justify-center py-6">
+        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-32 h-32 rounded-full border-4 ${isBroken ? 'bg-brand-red border-white shadow-inner' : 'bg-brand-green border-white shadow-md'} flex items-center justify-center text-5xl transition-all duration-300 bouncy-btn">
+          ${isBroken ? '💥' : '🛡️'}
+        </button>
+        <div class="mt-4 font-display font-bold text-xl text-brand-ink">${isBroken ? 'Shield Broken Today 💔' : 'Staying Strong! Tap only if you slip'}</div>
+      </div>
+    `;
   } else {
     actionBlock = `
       <div class="flex flex-col items-center justify-center py-6">
@@ -803,11 +890,9 @@ function renderTodayView(h, content) {
     `;
   }
 
-  const streak = calculateStreak(h);
-  const totalWins = Object.keys(h.log || {}).filter(k => {
-    const v = h.log[k];
-    return typeof v === 'number' ? v > 0 : v === true;
-  }).length;
+  const stats = getHabitStats(h);
+  const streak = stats.streak;
+  const totalWins = stats.totalWins;
 
   content.innerHTML = `
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pop">
@@ -828,9 +913,9 @@ function renderTodayView(h, content) {
       <div class="grid grid-cols-2 md:grid-cols-1 gap-6">
         
         <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft">
-          <div class="text-4xl mb-1">🔥</div>
+          <div class="text-4xl mb-1">${stats.isBreakType ? '🛡️' : '🔥'}</div>
           <div class="font-display font-bold text-4xl text-brand-orange font-num">${streak}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">Current Streak</div>
+          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${stats.isBreakType ? 'Days Resisted' : 'Current Streak'}</div>
         </div>
 
         <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-blueSoft">
@@ -872,12 +957,20 @@ function renderCalendarView(h, content) {
     const dStr = `${currentYear}-${String(currentMonthIdx+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const logVal = h.log ? h.log[dStr] : null;
     const hasNote = h.notes && h.notes[dStr];
-    
+    const isShielded = logVal === 'shield';
+
     let cellBg = 'bg-white/40 hover:bg-white/70 border-white/40';
     let cellText = 'text-brand-ink';
-    
-    if (logVal) {
-      cellBg = 'bg-brand-purple text-white border-brand-purple shadow-sm scale-95';
+
+    if (h.type === 'break') {
+      if (logVal === true) {
+        cellBg = 'bg-brand-red text-white border-brand-red shadow-sm scale-95';
+        cellText = 'text-white';
+      } else {
+        cellBg = 'bg-brand-green/40 hover:bg-brand-green/60 border-brand-green/60';
+      }
+    } else if (logVal) {
+      cellBg = isShielded ? 'bg-brand-blue text-white border-brand-blue shadow-sm scale-95' : 'bg-brand-purple text-white border-brand-purple shadow-sm scale-95';
       cellText = 'text-white';
     }
 
@@ -885,6 +978,7 @@ function renderCalendarView(h, content) {
       <div onclick="openNoteModal('${dStr}')" class="day-cell relative aspect-square rounded-2xl border-2 flex flex-col items-center justify-center font-display font-bold text-sm md:text-base cursor-pointer transition-all bouncy-btn ${cellBg} ${cellText}">
         <span>${day}</span>
         ${hasNote ? '<div class="note-dot"></div>' : ''}
+        ${isShielded ? '<div class="absolute -top-1.5 -right-1.5 text-sm">🛡️</div>' : ''}
       </div>
     `;
   }
@@ -907,18 +1001,30 @@ function renderCalendarView(h, content) {
 }
 
 function renderStatsView(h, content) {
-  const logEntries = Object.keys(h.log || {}).filter(k => {
-    const v = h.log[k];
-    return typeof v === 'number' ? v > 0 : v === true;
-  });
-  const totalCompletions = logEntries.length;
-  const streak = calculateStreak(h);
+  const stats = getHabitStats(h);
+  const totalCompletions = stats.totalWins;
+  const streak = stats.streak;
   const goal = parseInt(h.goal) || 60;
   const masteryPct = Math.min(100, Math.round((totalCompletions / goal) * 100));
+  const lvl = getLevelInfo();
+  const streakLabel = stats.isBreakType ? 'Days Resisted' : 'Active Streak';
+  const winsLabel = stats.isBreakType ? 'Clean Days' : 'Total Wins';
+  const masteryLabel = stats.isBreakType ? 'Clean days achieved' : 'total completions achieved';
 
   content.innerHTML = `
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pop">
-      
+
+      <div class="bento-card glass-card p-6 md:col-span-2 border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft">
+        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
+          <h4 class="font-display text-xl font-bold text-brand-ink flex items-center gap-2">🎖️ Hero Level ${lvl.level}</h4>
+          <span class="text-xs font-black text-brand-muted">${lvl.xpIntoLevel} / ${lvl.xpForNext} XP</span>
+        </div>
+        <div class="w-full bg-white/50 h-5 rounded-full overflow-hidden border border-white/60">
+          <div class="bg-gradient-to-r from-brand-yellow to-brand-orange h-full transition-all duration-500" style="width: ${lvl.pct}%"></div>
+        </div>
+        <p class="text-xs font-bold text-brand-muted mt-2">${lvl.xpForNext - lvl.xpIntoLevel} XP to Level ${lvl.level + 1}! Keep questing across all your habits 🌟</p>
+      </div>
+
       <div class="bento-card glass-card p-6 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-purpleSoft">
         <div class="text-6xl mb-3 animate-float">🏆</div>
         <h4 class="font-display text-2xl font-bold text-brand-ink mb-1">Quest Mastery Code</h4>
@@ -926,24 +1032,24 @@ function renderStatsView(h, content) {
         <div class="w-full bg-white/50 h-4 rounded-full overflow-hidden border border-white/60 max-w-xs mt-2">
           <div class="bg-brand-purple h-full" style="width: ${masteryPct}%"></div>
         </div>
-        <p class="text-xs font-bold text-brand-muted mt-3">${totalCompletions} / ${goal} total completions achieved</p>
+        <p class="text-xs font-bold text-brand-muted mt-3">${totalCompletions} / ${goal} ${masteryLabel}</p>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white">
-          <div class="text-4xl mb-1">🔥</div>
+          <div class="text-4xl mb-1">${stats.isBreakType ? '🛡️' : '🔥'}</div>
           <div class="font-display font-bold text-3xl text-brand-orange font-num">${streak}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">Active Streak</div>
+          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${streakLabel}</div>
         </div>
         <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white">
           <div class="text-4xl mb-1">✨</div>
           <div class="font-display font-bold text-3xl text-brand-pink font-num">${totalCompletions}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">Total Wins</div>
+          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${winsLabel}</div>
         </div>
         <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white col-span-2 bg-gradient-to-br from-white/40 to-brand-greenSoft">
-          <div class="text-3xl mb-1">🎈</div>
-          <div class="font-display font-bold text-lg text-brand-ink">Hero Level ${Math.floor(totalCompletions / 5) + 1}</div>
-          <div class="text-[11px] font-bold text-brand-muted mt-0.5">Keep grinding to rank up your profile!</div>
+          <div class="text-3xl mb-1">🛡️</div>
+          <div class="font-display font-bold text-lg text-brand-ink">${h.shieldBank || 0} Magic Shields Banked</div>
+          <div class="text-[11px] font-bold text-brand-muted mt-0.5">Shields auto-protect a streak if you miss exactly one day!</div>
         </div>
       </div>
 
@@ -1003,6 +1109,42 @@ function calculateStreak(h) {
   return streak;
 }
 
+function calculateBreakStreak(h) {
+  if (!h.log) h.log = {};
+  const start = h.createdAt ? new Date(h.createdAt) : new Date();
+  start.setHours(0, 0, 0, 0);
+  let checkDate = new Date();
+  checkDate.setHours(0, 0, 0, 0);
+  let streak = 0;
+  while (checkDate >= start) {
+    const dStr = formatDateLocal(checkDate);
+    if (h.log[dStr]) break;
+    streak++;
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  return streak;
+}
+
+function getHabitStats(h) {
+  if (h.type === 'break') {
+    const streak = calculateBreakStreak(h);
+    const brokenDays = Object.keys(h.log || {}).filter(k => h.log[k] === true).length;
+    const start = h.createdAt ? new Date(h.createdAt) : new Date();
+    start.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const totalDays = Math.max(1, Math.floor((today - start) / 86400000) + 1);
+    const totalWins = Math.max(0, totalDays - brokenDays);
+    return { streak, totalWins, brokenDays, isBreakType: true };
+  }
+  const streak = calculateStreak(h);
+  const totalWins = Object.keys(h.log || {}).filter(k => {
+    const v = h.log[k];
+    return typeof v === 'number' ? v > 0 : v === true;
+  }).length;
+  return { streak, totalWins, brokenDays: 0, isBreakType: false };
+}
+
 function adjustCalMonth(dir) {
   calMonth.setMonth(calMonth.getMonth() + dir);
   renderContent();
@@ -1015,11 +1157,27 @@ function toggleSingleHabit(id, e) {
   if (!h) return;
   const todayStr = getTodayStr();
   if (!h.log) h.log = {};
+
+  if (h.type === 'break') {
+    if (h.log[todayStr]) {
+      delete h.log[todayStr];
+      showToast('Marked as resisted again! 🛡️');
+    } else {
+      h.log[todayStr] = true;
+      showToast('Shield Broken! Habit slipped today 💥');
+    }
+    syncHabitToCloud(h);
+    renderContent();
+    return;
+  }
+
   if (h.log[todayStr]) {
     delete h.log[todayStr];
+    addXp(-10);
   } else {
     h.log[todayStr] = true;
     triggerConfetti();
+    addXp(10);
     showToast('Quest Logged! +10 XP ⭐');
   }
   syncHabitToCloud(h);
@@ -1034,12 +1192,19 @@ function adjustMultiReps(id, dir, e) {
   const todayStr = getTodayStr();
   if (!h.log) h.log = {};
   let current = typeof h.log[todayStr] === 'number' ? h.log[todayStr] : 0;
+  const wasPositive = current > 0;
   current = Math.max(0, current + dir);
   if (current === 0) {
     delete h.log[todayStr];
   } else {
     h.log[todayStr] = current;
     if (dir > 0) triggerConfetti();
+  }
+  if (dir > 0) {
+    addXp(10);
+    showToast('Quest Logged! +10 XP ⭐');
+  } else if (dir < 0 && wasPositive) {
+    addXp(-10);
   }
   syncHabitToCloud(h);
   renderContent();
@@ -1343,17 +1508,6 @@ function promptResetKeys() {
 
 window.addEventListener('online', () => setSyncStatus('synced'));
 window.addEventListener('offline', () => setSyncStatus('offline'));
-
-function setAppHeight() {
-  const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-  document.documentElement.style.setProperty('--app-height', h + 'px');
-}
-setAppHeight();
-window.addEventListener('resize', setAppHeight);
-window.addEventListener('orientationchange', setAppHeight);
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', setAppHeight);
-}
 
 window.onload = () => {
   checkSetup();
