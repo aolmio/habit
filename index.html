@@ -7,8 +7,8 @@
 <meta name="description" content="Turn habits into quests, protect streaks with Magic Shields, and celebrate every milestone.">
 <meta name="theme-color" content="#FF6FA0">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Trailmark">
@@ -386,7 +386,13 @@ input, textarea { -webkit-user-select: text; user-select: text; }
         <button onclick="setView('calendar', this)" data-view="calendar" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Calendar</button>
         <button onclick="setView('stats', this)" data-view="stats" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Stats</button>
         <button onclick="setView('insights', this)" data-view="insights" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Insights</button>
+        <button onclick="setView('shop', this)" data-view="shop" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Shop</button>
       </div>
+
+      <button onclick="setView('shop', null, null)" class="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/80 text-brand-ink shadow-sm border border-white bouncy-btn relative shrink-0" aria-label="Open shop">
+        <span class="text-lg">💰</span>
+        <span class="coinBadgeValue absolute -top-1 -right-1 bg-brand-yellow text-brand-ink text-[9px] font-black rounded-full px-1.5 py-0.5 border border-white min-w-[18px] text-center leading-tight">0</span>
+      </button>
 
       <button class="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/80 text-brand-purple shadow-sm border border-white bouncy-btn" onclick="openSettingsModal()">
         <i class="ph-bold ph-gear-six text-xl"></i>
@@ -469,9 +475,10 @@ function loadProfile() {
     const saved = JSON.parse(localStorage.getItem('heroProfile') || 'null');
     if (saved && typeof saved.xp === 'number') return saved;
   } catch (e) {}
-  return { xp: 0, initialized: false };
+  return { xp: 0, coins: 0, initialized: false };
 }
 let profile = loadProfile();
+if (typeof profile.coins !== 'number') profile.coins = 0;
 
 function saveProfile() {
   try { localStorage.setItem('heroProfile', JSON.stringify(profile)); } catch (e) {}
@@ -481,6 +488,45 @@ function addXp(amount) {
   profile.xp = Math.max(0, (profile.xp || 0) + amount);
   saveProfile();
   updateXpWidgets();
+}
+
+function addCoins(amount) {
+  profile.coins = Math.max(0, (profile.coins || 0) + amount);
+  saveProfile();
+  updateXpWidgets();
+}
+
+const SHOP_ITEMS = [
+  { id: 'shield_1', emoji: '🛡️', name: 'Magic Shield', desc: 'Adds +1 Shield to your active quest so a missed day won\'t break your streak.', cost: 40, effect: 'shield', amount: 1 },
+  { id: 'shield_3', emoji: '🛡️✨', name: 'Shield Pack', desc: 'Adds +3 Shields to your active quest all at once. Best value!', cost: 100, effect: 'shield', amount: 3 },
+  { id: 'freeze_streak', emoji: '❄️', name: 'Streak Freeze', desc: 'Instantly marks today as complete for your active quest using a shield-style save.', cost: 60, effect: 'freeze', amount: 1 }
+];
+
+function buyShopItem(itemId) {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if (!item) return;
+  const h = getHabit(activeId) || habits[0];
+  if (!h) { showToast('Add a quest first before shopping! 🗺️'); return; }
+  if ((profile.coins || 0) < item.cost) { showToast('Not enough coins yet! Keep questing 💰'); return; }
+
+  addCoins(-item.cost);
+
+  if (item.effect === 'shield') {
+    h.shieldBank = (h.shieldBank || 0) + item.amount;
+    showToast(`${item.name} purchased! +${item.amount} 🛡️`);
+  } else if (item.effect === 'freeze') {
+    const todayStr = getTodayStr();
+    if (!h.log) h.log = {};
+    if (!h.log[todayStr]) {
+      h.log[todayStr] = 'shield';
+      showToast('Streak Freeze used! Today is safe ❄️');
+    } else {
+      showToast('Today is already logged! ❄️');
+    }
+  }
+
+  syncHabitToCloud(h);
+  renderContent();
 }
 
 function getLevelInfo() {
@@ -503,12 +549,19 @@ function ensureProfileInitialized() {
     }).length;
   });
   profile.xp = Math.max(profile.xp || 0, totalCompletions * 10);
+  profile.coins = Math.max(profile.coins || 0, totalCompletions * 2);
   profile.initialized = true;
   saveProfile();
 }
 
 function updateXpWidgets() {
-  if (currentView === 'stats') renderContent();
+  if (currentView === 'stats' || currentView === 'shop') renderContent();
+  updateCoinBadge();
+}
+
+function updateCoinBadge() {
+  const badges = document.querySelectorAll('.coinBadgeValue');
+  badges.forEach(b => { b.textContent = profile.coins || 0; });
 }
 
 const haptic = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
@@ -597,6 +650,7 @@ async function loadDataFromCloud() {
   dirtyDeletes = [];
   ensureProfileInitialized();
   runDailyCheckIn();
+  updateCoinBadge();
   renderAll();
   setSyncStatus('synced');
 }
@@ -819,6 +873,12 @@ function getHabit(id) {
 function renderContent() {
   const content = document.getElementById('content');
   if (!content) return;
+
+  if (currentView === 'shop') {
+    renderShopView(content);
+    return;
+  }
+
   if (habits.length === 0) {
     content.innerHTML = `
       <div class="flex flex-col items-center justify-center h-full text-center p-6 animate-pop">
@@ -845,6 +905,41 @@ function renderContent() {
   } else if (currentView === 'insights') {
     renderInsightsView(h, content);
   }
+}
+
+function renderShopView(content) {
+  const activeHabit = getHabit(activeId) || habits[0];
+  const cardsHtml = SHOP_ITEMS.map(item => {
+    const affordable = (profile.coins || 0) >= item.cost;
+    return `
+      <div class="bento-card glass-card p-5 flex flex-col border border-white ${affordable ? '' : 'opacity-60'}">
+        <div class="text-4xl mb-2">${item.emoji}</div>
+        <h4 class="font-display text-lg font-bold text-brand-ink mb-1">${item.name}</h4>
+        <p class="text-xs font-bold text-brand-muted mb-4 flex-1">${item.desc}</p>
+        <button onclick="buyShopItem('${item.id}')" class="w-full py-3 rounded-2xl font-display font-bold bouncy-btn transition-all ${affordable ? 'bg-brand-purple text-white shadow-md hover:brightness-105' : 'bg-gray-200/60 text-brand-muted cursor-not-allowed'}">
+          💰 ${item.cost} Coins
+        </button>
+      </div>
+    `;
+  }).join('');
+
+  content.innerHTML = `
+    <div class="animate-pop">
+      <div class="bento-card glass-card p-6 mb-6 border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h3 class="font-display text-2xl font-bold text-brand-ink flex items-center gap-2">🛍️ Quest Shop</h3>
+          <p class="text-xs font-bold text-brand-muted mt-1">${activeHabit ? `Purchases apply to "${activeHabit.name}"` : 'Add a quest to start spending coins!'}</p>
+        </div>
+        <div class="flex items-center gap-2 bg-white/70 px-4 py-2 rounded-2xl border border-white/60">
+          <span class="text-xl">💰</span>
+          <span class="font-display font-bold text-xl text-brand-ink coinBadgeValue">${profile.coins || 0}</span>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        ${cardsHtml}
+      </div>
+    </div>
+  `;
 }
 
 function renderTodayView(h, content) {
@@ -1174,11 +1269,13 @@ function toggleSingleHabit(id, e) {
   if (h.log[todayStr]) {
     delete h.log[todayStr];
     addXp(-10);
+    addCoins(-2);
   } else {
     h.log[todayStr] = true;
     triggerConfetti();
     addXp(10);
-    showToast('Quest Logged! +10 XP ⭐');
+    addCoins(2);
+    showToast('Quest Logged! +10 XP ⭐ +2 Coins 💰');
   }
   syncHabitToCloud(h);
   renderContent();
@@ -1202,9 +1299,11 @@ function adjustMultiReps(id, dir, e) {
   }
   if (dir > 0) {
     addXp(10);
-    showToast('Quest Logged! +10 XP ⭐');
+    addCoins(2);
+    showToast('Quest Logged! +10 XP ⭐ +2 Coins 💰');
   } else if (dir < 0 && wasPositive) {
     addXp(-10);
+    addCoins(-2);
   }
   syncHabitToCloud(h);
   renderContent();
