@@ -1,16 +1,31 @@
 {
-  "name": "Trailmark — Habit Tracker",
+  "name": "Trailmark — Quest Habit Tracker",
   "short_name": "Trailmark",
-  "description": "Track daily habits, streaks, and reflections.",
+  "description": "Turn habits into quests, protect streaks with Magic Shields, and celebrate every milestone.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#F7F6F1",
-  "theme_color": "#5B5BD6",
+  "orientation": "portrait",
+  "background_color": "#FFDEE9",
+  "theme_color": "#FF6FA0",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
