@@ -58,7 +58,7 @@ tailwind.config = {
 html, body {
   background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
   background-attachment: fixed;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
 }
@@ -72,7 +72,10 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 16px); }
-.content-safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 100px); }
+.content-safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 140px); }
+@media (min-width: 768px) {
+  .content-safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 40px); }
+}
 @supports (-webkit-touch-callout: none) {
   .safe-pt { padding-top: calc(var(--sat) + 1rem) !important; }
   .safe-pt-sm { padding-top: calc(var(--sat) + 0.5rem) !important; }
@@ -166,14 +169,15 @@ input, textarea { -webkit-user-select: text; user-select: text; }
 .sheet-handle { width: 44px; height: 6px; border-radius: 999px; background: rgba(45, 31, 71, 0.15); margin: 0 auto 16px auto; }
 .bouncy-btn { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .bouncy-btn:active { transform: scale(0.92) translateY(2px); }
-.heat-0 { background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.6); color: #2D1F47; }
-.heat-1 { background: #E0B3FF; border-color: #D194FF; color: #2D1F47; }
-.heat-2 { background: #C585FF; border-color: #B566FF; color: #fff; }
-.heat-3 { background: #A755FF; border-color: #9B5DE5; color: #fff; }
-.heat-4 { background: #8533E6; border-color: #7220CC; color: #fff; }
+
+.heat-0 { background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.6); color: #6B5B95; }
+.heat-1 { background: #E0C3FC; border-color: #D0A9F9; color: #2D1F47; }
+.heat-2 { background: #9B5DE5; border-color: #8A40DB; color: #fff; }
+.heat-3 { background: #F15BB5; border-color: #E040A0; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+.heat-4 { background: #00F5D4; border-color: #00D1B5; color: #2D1F47; font-weight: 900; box-shadow: 0 0 12px rgba(0,245,212,0.6); }
 </style>
 </head>
-<body class="text-brand-ink font-body h-screen w-screen overflow-hidden flex antialiased select-none relative">
+<body class="text-brand-ink font-body h-[100dvh] w-screen overflow-hidden flex antialiased select-none relative">
 
 <div class="bubble-bg w-72 h-72 bg-brand-pink top-10 left-10"></div>
 <div class="bubble-bg w-96 h-96 bg-brand-blue bottom-10 right-20" style="animation-delay: -3s;"></div>
@@ -341,11 +345,14 @@ input, textarea { -webkit-user-select: text; user-select: text; }
     <button onclick="setView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
       <i class="ph-fill ph-squares-four text-xl"></i> Dashboard
     </button>
-    <button onclick="setView('global_calendar')" id="nav-calendar" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
+    <button onclick="setView('global_calendar')" id="nav-global_calendar" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
       <i class="ph-fill ph-calendar-blank text-xl"></i> Calendar
     </button>
     <button onclick="setView('shop')" id="nav-shop" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
       <i class="ph-fill ph-storefront text-xl"></i> Shop
+    </button>
+    <button onclick="setView('stats')" id="nav-stats" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
+      <i class="ph-fill ph-chart-line-up text-xl"></i> Stats
     </button>
 
     <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-3 mb-2 mt-6 flex items-center justify-between">
@@ -380,13 +387,13 @@ input, textarea { -webkit-user-select: text; user-select: text; }
     </div>
   </header>
 
-  <div id="content" class="flex-1 overflow-y-auto no-scrollbar relative scroll-smooth content-safe-pb md:safe-pb md:p-8 p-4"></div>
+  <div id="content" class="flex-1 overflow-y-auto no-scrollbar relative scroll-smooth content-safe-pb md:px-8 md:pt-8 px-4 pt-4"></div>
 
   <nav class="md:hidden fixed bottom-4 left-4 right-4 glass-card rounded-3xl shadow-float z-50 flex justify-around items-center py-2 px-2 border border-white safe-pb-nav">
     <button onclick="setView('dashboard')" id="mob-nav-dashboard" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
       <i class="ph-fill ph-squares-four nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Home</span>
     </button>
-    <button onclick="setView('global_calendar')" id="mob-nav-calendar" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
+    <button onclick="setView('global_calendar')" id="mob-nav-global_calendar" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
       <i class="ph-fill ph-calendar-blank nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Calendar</span>
     </button>
     <button onclick="openAddModal()" class="flex items-center justify-center -translate-y-5 w-14 h-14 bg-brand-pink text-white rounded-full shadow-lg active:scale-95 transition-all shrink-0 border-[3px] border-white bouncy-btn">
@@ -850,9 +857,9 @@ function renderGlobalCalendar(content) {
     let intensity = 0;
     if (activeCount > 0 && compCount > 0) {
       const ratio = compCount / activeCount;
-      if (ratio > 0.75) intensity = 4;
-      else if (ratio > 0.5) intensity = 3;
-      else if (ratio > 0.25) intensity = 2;
+      if (ratio >= 1) intensity = 4;
+      else if (ratio >= 0.66) intensity = 3;
+      else if (ratio >= 0.33) intensity = 2;
       else intensity = 1;
     }
 
@@ -880,14 +887,14 @@ function renderGlobalCalendar(content) {
         <div class="grid grid-cols-7 gap-2 md:gap-3">
           ${gridHtml}
         </div>
-        <div class="mt-8 flex justify-center items-center gap-3 text-xs font-bold text-brand-ink">
-          <span>Less</span>
-          <div class="w-4 h-4 rounded heat-0"></div>
-          <div class="w-4 h-4 rounded heat-1"></div>
-          <div class="w-4 h-4 rounded heat-2"></div>
-          <div class="w-4 h-4 rounded heat-3"></div>
-          <div class="w-4 h-4 rounded heat-4"></div>
-          <span>More</span>
+        <div class="mt-8 flex justify-center items-center gap-2 text-[11px] font-black uppercase text-brand-ink tracking-wider">
+          <span>0%</span>
+          <div class="w-5 h-5 rounded flex items-center justify-center border border-white/60 heat-0"></div>
+          <div class="w-5 h-5 rounded flex items-center justify-center heat-1"></div>
+          <div class="w-5 h-5 rounded flex items-center justify-center heat-2"></div>
+          <div class="w-5 h-5 rounded flex items-center justify-center heat-3"></div>
+          <div class="w-5 h-5 rounded flex items-center justify-center heat-4 text-[10px]">✨</div>
+          <span>100%</span>
         </div>
       </div>
     </div>
@@ -1011,7 +1018,6 @@ function renderHabitDetail(content) {
 
   const stats = getHabitStats(h);
   
-  // Specific Calendar HTML
   const cMonthIdx = calMonth.getMonth();
   const cYear = calMonth.getFullYear();
   const fDay = new Date(cYear, cMonthIdx, 1).getDay();
