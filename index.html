@@ -71,9 +71,8 @@ body {
 .font-num { font-family: 'Fredoka', sans-serif; font-variant-numeric: tabular-nums; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.safe-pb { padding-bottom: env(safe-area-inset-bottom, 16px); }
-
+.safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 16px); }
+.content-safe-pb { padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 100px); }
 @supports (-webkit-touch-callout: none) {
   .safe-pt { padding-top: calc(var(--sat) + 1rem) !important; }
   .safe-pt-sm { padding-top: calc(var(--sat) + 0.5rem) !important; }
@@ -86,35 +85,34 @@ body {
     #achievement { top: calc(var(--sat) + 2rem); }
   }
 }
-
 button, a, [role="button"] { touch-action: manipulation; }
 button, a, [role="button"], input, select, textarea { -webkit-user-select: none; user-select: none; }
 input, textarea { -webkit-user-select: text; user-select: text; }
 .bubble-bg {
   position: absolute;
   border-radius: 50%;
-  filter: blur(40px);
+  filter: blur(50px);
   z-index: 0;
-  opacity: 0.5;
+  opacity: 0.6;
   pointer-events: none;
-  animation: floatBg 12s ease-in-out infinite alternate;
+  animation: floatBg 15s ease-in-out infinite alternate;
 }
 @keyframes floatBg {
   0% { transform: translateY(0px) scale(1); }
-  100% { transform: translateY(-40px) scale(1.2); }
+  100% { transform: translateY(-50px) scale(1.1); }
 }
 .glass-card {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: 0 12px 32px 0 rgba(45, 31, 71, 0.05);
 }
 .glass-panel {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border-right: 2px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
 }
 .particle {
   position: absolute;
@@ -145,15 +143,9 @@ input, textarea { -webkit-user-select: text; user-select: text; }
   50% { transform: translateY(-12px) rotate(3deg); }
 }
 .animate-float { animation: float 4s ease-in-out infinite; }
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-8deg); }
-  75% { transform: rotate(8deg); }
-}
-.animate-wiggle { animation: wiggle 0.5s ease-in-out infinite; }
 @keyframes pop {
-  0% { transform: scale(0.85); opacity: 0; }
-  70% { transform: scale(1.05); }
+  0% { transform: scale(0.9); opacity: 0; }
+  70% { transform: scale(1.02); }
   100% { transform: scale(1); opacity: 1; }
 }
 .animate-pop { animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
@@ -165,79 +157,77 @@ input, textarea { -webkit-user-select: text; user-select: text; }
   .modal-content.sheet { transform: translateY(100%); border-radius: 2.5rem 2.5rem 0 0; }
   .modal-overlay.open .modal-content.sheet { transform: translateY(0); }
 }
-.check-ring { transition: stroke-dashoffset 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.tab-pill { color: #6B5B95; background: rgba(255, 255, 255, 0.3); }
-.tab-pill.active { background: #9B5DE5; color: #fff; box-shadow: 0 6px 0 0 #2D1F47; transform: translateY(-2px); }
-.nav-item { color: #6B5B95; }
-.nav-item.active { color: #9B5DE5; }
-.nav-item.active .nav-ic { transform: translateY(-4px) scale(1.2); text-shadow: 0 4px 10px rgba(155,93,229,0.3); }
-.shield-cell { background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(51, 210, 255, 0.15) 4px, rgba(51, 210, 255, 0.15) 8px); }
-.skip-cell { background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(254, 228, 64, 0.2) 4px, rgba(254, 228, 64, 0.2) 8px); }
+.nav-item { color: #6B5B95; transition: all 0.2s; }
+.nav-item.active { color: #9B5DE5; transform: translateY(-4px); }
+.nav-item.active .nav-ic { transform: scale(1.15); text-shadow: 0 4px 10px rgba(155,93,229,0.3); }
 .note-dot { position: absolute; bottom: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: #9B5DE5; box-shadow: 0 0 0 3px #fff; }
-.bento-card { border-radius: 2.25rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.bento-card { border-radius: 2rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(45, 31, 71, 0.1); }
 .sheet-handle { width: 44px; height: 6px; border-radius: 999px; background: rgba(45, 31, 71, 0.15); margin: 0 auto 16px auto; }
-.list-row { display: flex; align-items: center; gap: 14px; padding: 16px 20px; min-height: 56px; }
-.list-row + .list-row { border-top: 2px solid rgba(255,255,255,0.4); }
-.bouncy-btn { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.bouncy-btn { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .bouncy-btn:active { transform: scale(0.92) translateY(2px); }
+.heat-0 { background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.6); color: #2D1F47; }
+.heat-1 { background: #E0B3FF; border-color: #D194FF; color: #2D1F47; }
+.heat-2 { background: #C585FF; border-color: #B566FF; color: #fff; }
+.heat-3 { background: #A755FF; border-color: #9B5DE5; color: #fff; }
+.heat-4 { background: #8533E6; border-color: #7220CC; color: #fff; }
 </style>
 </head>
-<body class="text-brand-ink font-body h-screen w-screen overflow-hidden flex flex-col md:flex-row antialiased select-none relative">
+<body class="text-brand-ink font-body h-screen w-screen overflow-hidden flex antialiased select-none relative">
 
 <div class="bubble-bg w-72 h-72 bg-brand-pink top-10 left-10"></div>
 <div class="bubble-bg w-96 h-96 bg-brand-blue bottom-10 right-20" style="animation-delay: -3s;"></div>
 <div class="bubble-bg w-80 h-80 bg-brand-yellow top-1/2 left-1/3" style="animation-delay: -6s;"></div>
 
-<div id="setupModal" class="modal-overlay fixed inset-0 z-50 flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md px-0 md:px-4">
-  <div class="modal-content sheet w-full md:w-[460px] bg-white/80 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb border-2 border-white/60">
+<div id="setupModal" class="modal-overlay fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md px-0 md:px-4">
+  <div class="modal-content sheet w-full md:w-[460px] bg-white/90 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb border border-white/60">
     <div class="sheet-handle md:hidden"></div>
     <div class="w-16 h-16 rounded-3xl bg-brand-purpleSoft text-brand-purple flex items-center justify-center text-3xl mb-4 animate-float"><i class="ph-fill ph-magic-wand"></i></div>
-    <h2 class="font-display text-3xl font-bold mb-1 tracking-tight">Connect Your Quest Book! ✨</h2>
-    <p class="text-brand-muted text-sm mb-6 font-bold">Enter your keys to magic-sync your hero journey everywhere instantly.</p>
+    <h2 class="font-display text-3xl font-bold mb-1 tracking-tight">Connect Quest Book ✨</h2>
+    <p class="text-brand-muted text-sm mb-6 font-bold">Sync your hero journey seamlessly across devices.</p>
     <div class="space-y-4">
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Project Magic URL</label>
-        <input id="setupUrl" type="text" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="https://xxxx.supabase.co">
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Project URL</label>
+        <input id="setupUrl" type="text" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="https://xxxx.supabase.co">
       </div>
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Secret Anon Key</label>
-        <input id="setupKey" type="password" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="eyJh...">
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Anon Key</label>
+        <input id="setupKey" type="password" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="eyJh...">
       </div>
-      <button onclick="handleSetupSubmit()" class="w-full bg-brand-purple text-white font-display font-bold text-xl py-4 rounded-2xl mt-2 shadow-pop hover:brightness-105 bouncy-btn flex items-center justify-center gap-2 border-2 border-white/20">
+      <button onclick="handleSetupSubmit()" class="w-full bg-brand-purple text-white font-display font-bold text-xl py-4 rounded-2xl mt-2 shadow-pop hover:brightness-105 bouncy-btn flex items-center justify-center gap-2">
         <i class="ph-bold ph-rocket-launch"></i> Let's Go! 🚀
       </button>
     </div>
   </div>
 </div>
 
-<div id="confirmModal" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center bg-brand-ink/40 backdrop-blur-md px-4">
-  <div class="modal-content w-full max-w-sm bg-white/90 backdrop-blur-2xl p-7 rounded-4xl shadow-float text-center border-2 border-white">
+<div id="confirmModal" class="modal-overlay fixed inset-0 z-[110] flex items-center justify-center bg-brand-ink/40 backdrop-blur-md px-4">
+  <div class="modal-content w-full max-w-sm bg-white/95 backdrop-blur-2xl p-7 rounded-4xl shadow-float text-center border border-white">
     <div class="text-5xl mb-3">🤔</div>
     <h2 id="confirmTitle" class="font-display text-2xl font-bold mb-2"></h2>
     <p id="confirmMsg" class="text-brand-muted mb-6 text-sm font-bold"></p>
     <div class="flex gap-4">
-      <button onclick="closeConfirmModal()" class="flex-1 py-3.5 rounded-2xl font-display font-bold bg-gray-200/60 hover:bg-gray-200 transition-all bouncy-btn">No, Wait!</button>
-      <button id="confirmActionBtn" class="flex-1 py-3.5 rounded-2xl font-display font-bold bg-brand-red text-white hover:brightness-110 transition-all bouncy-btn shadow-md">Yes, Do It! 💥</button>
+      <button onclick="closeConfirmModal()" class="flex-1 py-3.5 rounded-2xl font-display font-bold bg-gray-200/60 hover:bg-gray-200 transition-all bouncy-btn text-brand-ink">Cancel</button>
+      <button id="confirmActionBtn" class="flex-1 py-3.5 rounded-2xl font-display font-bold bg-brand-red text-white hover:brightness-110 transition-all bouncy-btn shadow-md">Confirm</button>
     </div>
   </div>
 </div>
 
-<div id="noteModal" class="modal-overlay fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
-  <div class="modal-content sheet w-full md:w-[540px] bg-white/80 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[88vh] flex flex-col border-2 border-white/60">
+<div id="noteModal" class="modal-overlay fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
+  <div class="modal-content sheet w-full md:w-[540px] bg-white/90 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[88vh] flex flex-col border border-white/60">
     <div class="sheet-handle md:hidden"></div>
     <div class="flex justify-between items-center mb-2 shrink-0">
-      <h2 class="font-display text-2xl font-bold flex items-center gap-2"><i class="ph-fill ph-book-open-text text-brand-pink"></i> Quest Diary 📝</h2>
-      <button onclick="closeNoteModal()" aria-label="Close" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center shrink-0 bouncy-btn"><i class="ph-bold ph-x text-lg"></i></button>
+      <h2 class="font-display text-2xl font-bold flex items-center gap-2"><i class="ph-fill ph-book-open-text text-brand-pink"></i> Quest Diary</h2>
+      <button onclick="closeNoteModal()" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center shrink-0 bouncy-btn"><i class="ph-bold ph-x text-lg"></i></button>
     </div>
     <div class="flex-1 overflow-y-auto no-scrollbar pt-2">
       <p id="noteDateLabel" class="text-xs font-black uppercase tracking-wider text-brand-purple mb-2"></p>
-      <textarea id="noteText" rows="4" maxlength="400" placeholder="What awesome things happened today? Write a fun story..." class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3 outline-none focus:border-brand-purple transition-all resize-none text-base font-bold shadow-inner"></textarea>
+      <textarea id="noteText" rows="4" maxlength="400" placeholder="What awesome things happened?" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3 outline-none focus:border-brand-purple transition-all resize-none text-base font-bold shadow-inner"></textarea>
       <div class="flex gap-3 pt-4 pb-5">
         <button id="noteDeleteBtn" onclick="deleteNote()" class="hidden px-5 rounded-2xl bg-brand-redSoft text-brand-red hover:brightness-95 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-trash text-xl"></i></button>
         <button onclick="saveNote()" class="flex-1 bg-brand-pink text-white font-display font-bold py-4 rounded-2xl shadow-md hover:brightness-105 transition-all bouncy-btn">Save Story ⭐</button>
       </div>
-      <div class="border-t-2 border-white/60 pt-4">
+      <div class="border-t border-brand-muted/20 pt-4">
         <div class="text-xs font-display font-black uppercase tracking-wider text-brand-muted mb-3 flex items-center gap-1.5"><i class="ph-fill ph-clock-counter-clockwise text-brand-blue"></i> Past Stories</div>
         <div id="diaryHistoryList" class="space-y-2.5"></div>
       </div>
@@ -245,226 +235,190 @@ input, textarea { -webkit-user-select: text; user-select: text; }
   </div>
 </div>
 
-<div id="settingsModal" class="modal-overlay fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
-  <div class="modal-content sheet w-full md:w-[480px] bg-white/80 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[85vh] overflow-y-auto no-scrollbar border-2 border-white/60">
+<div id="settingsModal" class="modal-overlay fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
+  <div class="modal-content sheet w-full md:w-[480px] bg-white/90 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[85vh] overflow-y-auto no-scrollbar border border-white/60">
     <div class="sheet-handle md:hidden"></div>
     <div class="flex justify-between items-center mb-6">
-      <h2 class="font-display text-2xl font-bold flex items-center gap-2">⚙️ Game Options</h2>
-      <button onclick="closeSettingsModal()" aria-label="Close" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-x text-lg"></i></button>
+      <h2 class="font-display text-2xl font-bold flex items-center gap-2">⚙️ Settings</h2>
+      <button onclick="closeSettingsModal()" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-x text-lg"></i></button>
     </div>
-    <div class="flex items-center gap-4 p-4 rounded-3xl bg-white/40 border-2 border-white/80 mb-6">
+    <div class="flex items-center gap-4 p-4 rounded-3xl bg-white/60 border border-white/80 mb-6 shadow-sm">
       <div id="connDot" class="w-3 h-3 rounded-full bg-brand-green shrink-0 shadow-lg"></div>
       <div class="flex-1 min-w-0">
-        <div id="connLabel" class="font-display font-bold text-base">All Synced! 🎉</div>
-        <div class="text-xs text-brand-muted font-bold">Your progress is safely guarded in the cloud.</div>
+        <div id="connLabel" class="font-display font-bold text-base">All Synced!</div>
+        <div class="text-xs text-brand-muted font-bold">Progress safely guarded in the cloud.</div>
       </div>
-      <button id="forceSyncBtn" onclick="forceSync()" aria-label="Sync" class="w-12 h-12 rounded-2xl bg-brand-purpleSoft text-brand-purple flex items-center justify-center shrink-0 hover:scale-105 active:scale-95 transition-all bouncy-btn border border-white">
+      <button onclick="forceSync()" class="w-12 h-12 rounded-2xl bg-brand-purpleSoft text-brand-purple flex items-center justify-center shrink-0 bouncy-btn border border-white">
         <i id="forceSyncIcon" class="ph-bold ph-arrows-clockwise text-xl"></i>
       </button>
     </div>
-    <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-1 mb-2">Backpack Data</div>
-    <div class="rounded-3xl bg-white/40 border-2 border-white/80 overflow-hidden mb-6">
-      <button onclick="exportData()" class="list-row w-full hover:bg-white/50 transition-all font-display font-bold text-sm text-left text-brand-ink">
-        <i class="ph-bold ph-download-simple text-xl text-brand-blue shrink-0"></i> <span class="flex-1">Download Quest Data (.json)</span> <i class="ph-bold ph-caret-right text-brand-muted shrink-0"></i>
+    <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-1 mb-2">Data Management</div>
+    <div class="rounded-3xl bg-white/60 border border-white/80 overflow-hidden mb-6 shadow-sm">
+      <button onclick="exportData()" class="flex items-center gap-3 w-full p-4 hover:bg-white/50 transition-all font-display font-bold text-sm text-left text-brand-ink border-b border-white/40">
+        <i class="ph-bold ph-download-simple text-xl text-brand-blue shrink-0"></i> <span class="flex-1">Download Backup</span>
       </button>
-      <button onclick="document.getElementById('importFile').click()" class="list-row w-full hover:bg-white/50 transition-all font-display font-bold text-sm text-left text-brand-ink">
-        <i class="ph-bold ph-upload-simple text-xl text-brand-orange shrink-0"></i> <span class="flex-1">Upload Quest Data (.json)</span> <i class="ph-bold ph-caret-right text-brand-muted shrink-0"></i>
+      <button onclick="document.getElementById('importFile').click()" class="flex items-center gap-3 w-full p-4 hover:bg-white/50 transition-all font-display font-bold text-sm text-left text-brand-ink">
+        <i class="ph-bold ph-upload-simple text-xl text-brand-orange shrink-0"></i> <span class="flex-1">Restore Backup</span>
       </button>
       <input id="importFile" type="file" accept="application/json" class="hidden" onchange="importData(event)">
     </div>
     <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-1 mb-2">Danger Zone</div>
-    <div class="rounded-3xl bg-white/40 border-2 border-white/80 overflow-hidden">
-      <button onclick="promptResetKeys()" class="list-row w-full hover:bg-brand-redSoft transition-all font-display font-bold text-sm text-brand-red text-left justify-center gap-2">
-        <i class="ph-bold ph-plug text-xl shrink-0"></i> <span>Disconnect Quest Book</span>
+    <div class="rounded-3xl bg-white/60 border border-white/80 overflow-hidden shadow-sm">
+      <button onclick="promptResetKeys()" class="flex items-center gap-3 w-full p-4 hover:bg-brand-redSoft transition-all font-display font-bold text-sm text-brand-red text-left justify-center">
+        <i class="ph-bold ph-plug text-xl shrink-0"></i> <span>Disconnect Account</span>
       </button>
     </div>
   </div>
 </div>
 
-<div id="habitModal" class="modal-overlay fixed inset-0 z-50 flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
-  <div class="modal-content sheet w-full md:w-[560px] bg-white/80 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[90vh] overflow-y-auto no-scrollbar border-2 border-white/60">
+<div id="habitModal" class="modal-overlay fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-brand-ink/40 backdrop-blur-md" onclick="closeModalOutside(event)">
+  <div class="modal-content sheet w-full md:w-[560px] bg-white/95 backdrop-blur-2xl p-6 md:p-8 md:rounded-4xl shadow-float safe-pb max-h-[90vh] overflow-y-auto no-scrollbar border border-white/60">
     <div class="sheet-handle md:hidden"></div>
     <div class="flex justify-between items-center mb-6">
-      <h2 id="modalTitle" class="font-display text-3xl font-bold tracking-tight text-brand-purple">Create New Quest 🌟</h2>
-      <button onclick="closeModal()" aria-label="Close" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-x text-xl"></i></button>
+      <h2 id="modalTitle" class="font-display text-3xl font-bold tracking-tight text-brand-purple">Create Quest</h2>
+      <button onclick="closeModal()" class="w-11 h-11 rounded-full hover:bg-white/60 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-x text-xl"></i></button>
     </div>
     <div class="space-y-6">
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">What is your quest name?</label>
-        <input id="hName" type="text" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-4 font-bold text-lg outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="e.g., Drink morning water 🥤" maxlength="40">
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Quest Name</label>
+        <input id="hName" type="text" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-4 font-bold text-lg outline-none focus:border-brand-purple transition-all shadow-inner" placeholder="e.g., Read 10 pages 📚" maxlength="40">
       </div>
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Choose your quest token</label>
-        <div id="emojiRow" class="flex flex-wrap gap-2.5 bg-white/30 p-3 rounded-2xl border border-white/50"></div>
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Icon</label>
+        <div id="emojiRow" class="flex flex-wrap gap-2.5 bg-white/50 p-3 rounded-2xl border border-white/80"></div>
       </div>
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Select magic aura color</label>
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Aura Color</label>
         <div id="colorRow" class="flex gap-3 overflow-x-auto no-scrollbar py-1"></div>
       </div>
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Quest Realm Type</label>
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Quest Type</label>
         <div class="relative">
-          <select id="hType" onchange="onTypeChange()" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none appearance-none focus:border-brand-purple transition-all cursor-pointer shadow-inner">
-            <option value="daily">Daily Challenge (once a day)</option>
-            <option value="multi">Multi-Tasker (a few times daily)</option>
-            <option value="weekly">Weekly Journey (certain days)</option>
-            <option value="break">Shield Shield (avoid a bad habit)</option>
+          <select id="hType" onchange="onTypeChange()" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none appearance-none focus:border-brand-purple transition-all cursor-pointer shadow-inner">
+            <option value="daily">Daily</option>
+            <option value="multi">Multiple Times Daily</option>
+            <option value="weekly">Specific Days/Week</option>
+            <option value="break">Break a Habit (Shield)</option>
           </select>
           <i class="ph-bold ph-caret-down absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-muted"></i>
         </div>
       </div>
       <div id="typeExtra"></div>
       <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Mastery Goal (Total Reps to Win)</label>
-        <input id="hGoal" type="number" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="365" value="60">
+        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Mastery Goal (Days/Reps)</label>
+        <input id="hGoal" type="number" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="365" value="60">
       </div>
-      <div class="p-4 rounded-3xl bg-white/40 border-2 border-white/80">
+      <div class="p-4 rounded-3xl bg-white/60 border border-white/80 shadow-sm">
         <div class="flex items-center justify-between mb-1">
-          <label class="text-base font-display font-bold flex items-center gap-2"><i class="ph-fill ph-bell text-brand-orange animate-bounce"></i> Summon Daily Reminder</label>
-          <button id="reminderToggle" onclick="toggleReminder()" class="w-14 h-8 rounded-full bg-gray-300 relative transition-all shrink-0" aria-label="Toggle reminder">
+          <label class="text-base font-display font-bold flex items-center gap-2"><i class="ph-fill ph-bell text-brand-orange"></i> Reminder</label>
+          <button id="reminderToggle" onclick="toggleReminder()" class="w-14 h-8 rounded-full bg-gray-300 relative transition-all shrink-0">
             <span id="reminderKnob" class="absolute top-1 left-1 w-6 h-6 rounded-full bg-white shadow-md transition-transform"></span>
           </button>
         </div>
-        <p class="text-xs text-brand-muted font-bold mb-3">Sends a playful magical nudge if your quest is not complete yet.</p>
-        <input id="reminderTime" type="time" value="09:00" class="w-full bg-white/60 border-2 border-white/80 rounded-2xl px-4 py-3 font-bold outline-none focus:border-brand-purple transition-all">
+        <p class="text-xs text-brand-muted font-bold mb-3">Daily nudge if not completed.</p>
+        <input id="reminderTime" type="time" value="09:00" class="w-full bg-white/50 border border-white/80 rounded-xl px-4 py-3 font-bold outline-none focus:border-brand-purple transition-all">
       </div>
       <div class="flex gap-4 pt-2">
         <button id="deleteBtn" onclick="promptDeleteHabit()" class="hidden px-5 rounded-2xl bg-brand-redSoft text-brand-red hover:brightness-95 transition-all flex items-center justify-center bouncy-btn"><i class="ph-bold ph-trash text-xl"></i></button>
-        <button onclick="saveHabit()" class="flex-1 bg-brand-purple text-white font-display font-bold text-xl py-4 rounded-2xl shadow-md hover:brightness-105 transition-all bouncy-btn flex items-center justify-center gap-2">
-          <i class="ph-bold ph-check-circle"></i> Activate Quest! 🎇
+        <button onclick="saveHabit()" class="flex-1 bg-brand-purple text-white font-display font-bold text-xl py-4 rounded-2xl shadow-md hover:brightness-105 transition-all bouncy-btn">
+          Save Quest
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<aside id="sidebar" class="glass-panel fixed md:sticky top-0 left-0 h-screen z-[45] flex flex-col w-64 md:w-64 transition-all duration-300 transform -translate-x-full md:translate-x-0 overflow-hidden shrink-0 safe-pl">
-  <div class="p-4 md:pt-4 flex items-center justify-between border-b-2 border-white/40 safe-pt-sm">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-2xl bg-brand-purple text-white flex items-center justify-center text-xl shadow-md animate-float">
-        <i class="ph-fill ph-compass-tool"></i>
-      </div>
-      <span id="sidebarTitle" class="font-display font-bold text-2xl tracking-tight bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">Trailmark</span>
+<aside class="hidden md:flex glass-panel flex-col w-64 h-full shrink-0 z-40 relative safe-pt safe-pb shadow-lg">
+  <div class="p-6 flex items-center gap-3 border-b border-white/30">
+    <div class="w-10 h-10 rounded-xl bg-brand-purple text-white flex items-center justify-center text-xl shadow-md">
+      <i class="ph-fill ph-compass-tool"></i>
     </div>
-    <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl bg-white/60 hover:bg-white flex items-center justify-center text-brand-ink bouncy-btn shadow-sm">
-      <i id="sidebarToggleIcon" class="ph-bold ph-caret-left text-base"></i>
+    <span class="font-display font-bold text-2xl tracking-tight bg-gradient-to-r from-brand-purple to-brand-pink bg-clip-text text-transparent">Trailmark</span>
+  </div>
+  
+  <div class="flex-1 overflow-y-auto no-scrollbar py-4 px-3 space-y-1">
+    <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-3 mb-2 mt-2">Views</div>
+    <button onclick="setView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
+      <i class="ph-fill ph-squares-four text-xl"></i> Dashboard
     </button>
-  </div>
-  <div class="px-4 pt-4 pb-2">
-    <button onclick="openAddModal()" class="w-full py-3 border-[3px] border-dashed border-brand-purple/40 hover:border-brand-purple bg-white/30 hover:bg-white/60 rounded-2xl text-brand-purple font-display font-bold text-base transition-all flex items-center justify-center gap-2 bouncy-btn">
-      <i class="ph-bold ph-plus-circle text-xl"></i> <span class="sidebar-text">New Quest</span>
+    <button onclick="setView('global_calendar')" id="nav-calendar" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
+      <i class="ph-fill ph-calendar-blank text-xl"></i> Calendar
     </button>
+    <button onclick="setView('shop')" id="nav-shop" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn desktop-nav">
+      <i class="ph-fill ph-storefront text-xl"></i> Shop
+    </button>
+
+    <div class="text-xs font-black uppercase tracking-wider text-brand-muted px-3 mb-2 mt-6 flex items-center justify-between">
+      <span>Your Quests</span>
+      <button onclick="openAddModal()" class="text-brand-purple hover:scale-110 transition-transform"><i class="ph-bold ph-plus text-lg"></i></button>
+    </div>
+    <div id="sidebarHabitList" class="space-y-1"></div>
   </div>
-  <div id="habitListDesktop" class="flex-1 overflow-y-auto no-scrollbar px-3 space-y-2 pb-4 pt-1"></div>
-  <div id="sidebarSync" class="mx-4 mb-3 p-3 rounded-2xl bg-white/40 border-2 border-white/80 flex items-center gap-3 cursor-pointer hover:bg-white/60 transition-all bouncy-btn" onclick="forceSync()" role="button" tabindex="0">
-    <div id="connDot2" class="w-2.5 h-2.5 rounded-full bg-brand-green shrink-0 shadow"></div>
-    <div id="connLabel2" class="text-xs font-display font-bold flex-1 min-w-0 truncate sidebar-text">All Synced</div>
-    <i id="forceSyncIcon2" class="ph-bold ph-arrows-clockwise text-brand-muted shrink-0 text-base"></i>
-  </div>
-  <div class="p-4 border-t-2 border-white/40 bg-white/20">
-    <button onclick="openSettingsModal()" class="w-full py-3 flex items-center gap-3 text-brand-muted hover:text-brand-ink transition-colors font-display font-bold text-base rounded-2xl hover:bg-white/50 px-3 bouncy-btn">
-      <i class="ph-fill ph-gear-six text-xl text-brand-purple"></i> <span class="sidebar-text">Settings</span>
+
+  <div class="p-4 border-t border-white/30">
+    <button onclick="openSettingsModal()" class="w-full flex items-center gap-3 px-3 py-3 rounded-2xl text-brand-muted hover:text-brand-ink hover:bg-white/50 font-bold transition-all bouncy-btn">
+      <i class="ph-fill ph-gear-six text-xl"></i> Settings
     </button>
   </div>
 </aside>
 
-<div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-brand-ink/20 backdrop-blur-xs z-[35] opacity-0 pointer-events-none transition-opacity md:hidden"></div>
-
-<main class="flex-1 flex flex-col h-screen w-full overflow-hidden relative">
-  <div id="adfTopBar" class="w-full z-40 p-4 md:p-6 shrink-0 safe-pt safe-pl safe-pr">
-    <div class="glass-card rounded-3xl px-4 py-3 flex items-center justify-between gap-4 border border-white">
-      <button onclick="toggleSidebar()" class="md:hidden w-11 h-11 rounded-2xl bg-white/60 flex items-center justify-center text-brand-ink shadow-sm bouncy-btn">
-        <i class="ph-bold ph-list text-xl"></i>
-      </button>
-      
-      <div id="datePill" class="font-display font-bold text-xs bg-white/80 px-3 py-2 rounded-full flex items-center gap-2 shrink-0 border border-white/80 shadow-sm text-brand-purple">
-        <i class="ph-fill ph-sparkles text-brand-yellow animate-spin-slow"></i> <span></span>
+<main class="flex-1 flex flex-col h-full w-full overflow-hidden relative">
+  <header class="md:hidden glass-card shrink-0 w-full z-40 safe-pt px-4 py-3 flex items-center justify-between border-b border-white/50">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-brand-purple text-white flex items-center justify-center shadow-md">
+        <i class="ph-fill ph-compass-tool text-sm"></i>
       </div>
-      
-      <div id="tabBar" class="hidden md:flex bg-white/30 p-1 rounded-full border border-white/40 overflow-x-auto no-scrollbar">
-        <button onclick="setView('today', this)" data-view="today" class="tab-pill active px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Today</button>
-        <button onclick="setView('calendar', this)" data-view="calendar" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Calendar</button>
-        <button onclick="setView('stats', this)" data-view="stats" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Stats</button>
-        <button onclick="setView('insights', this)" data-view="insights" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Insights</button>
-        <button onclick="setView('shop', this)" data-view="shop" class="tab-pill px-4 py-1.5 rounded-full text-sm font-display font-bold transition-all whitespace-nowrap bouncy-btn">Shop</button>
+      <span class="font-display font-bold text-lg tracking-tight text-brand-ink">Trailmark</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="bg-white/80 px-3 py-1.5 rounded-full border border-white/80 flex items-center gap-1.5 shadow-sm text-sm font-bold">
+        <span>💰</span> <span class="coinBadgeValue">0</span>
       </div>
-
-      <button onclick="setView('shop', null, null)" class="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/80 text-brand-ink shadow-sm border border-white bouncy-btn relative shrink-0" aria-label="Open shop">
-        <span class="text-lg">💰</span>
-        <span class="coinBadgeValue absolute -top-1 -right-1 bg-brand-yellow text-brand-ink text-[9px] font-black rounded-full px-1.5 py-0.5 border border-white min-w-[18px] text-center leading-tight">0</span>
-      </button>
-
-      <button class="w-11 h-11 rounded-2xl flex items-center justify-center bg-white/80 text-brand-purple shadow-sm border border-white bouncy-btn" onclick="openSettingsModal()">
-        <i class="ph-bold ph-gear-six text-xl"></i>
+      <button onclick="openSettingsModal()" class="w-9 h-9 bg-white/60 rounded-xl flex items-center justify-center text-brand-ink bouncy-btn shadow-sm border border-white">
+        <i class="ph-bold ph-gear-six"></i>
       </button>
     </div>
-  </div>
+  </header>
 
-  <div id="mobileStripWrapper" class="md:hidden w-full px-4 pb-3 z-20 shrink-0 safe-pl safe-pr">
-    <div id="mobileStrip" class="flex overflow-x-auto no-scrollbar py-1 gap-3 snap-x"></div>
-  </div>
+  <div id="content" class="flex-1 overflow-y-auto no-scrollbar relative scroll-smooth content-safe-pb md:safe-pb md:p-8 p-4"></div>
 
-  <div id="content" class="flex-1 overflow-y-auto no-scrollbar px-4 md:px-6 pb-28 md:pb-6 relative scroll-smooth"></div>
-
-  <nav class="md:hidden fixed bottom-5 left-4 right-4 bg-white/60 backdrop-blur-2xl border border-white/80 rounded-3xl shadow-float z-30 flex justify-around items-center py-2 px-3 safe-pb">
-    <button onclick="setView('today', null, this)" data-view="today" class="nav-item active flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
-      <i class="ph-fill ph-sun-horizon nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Today</span>
+  <nav class="md:hidden fixed bottom-4 left-4 right-4 glass-card rounded-3xl shadow-float z-50 flex justify-around items-center py-2 px-2 border border-white safe-pb-nav">
+    <button onclick="setView('dashboard')" id="mob-nav-dashboard" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
+      <i class="ph-fill ph-squares-four nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Home</span>
     </button>
-    <button onclick="setView('calendar', null, this)" data-view="calendar" class="nav-item flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
-      <i class="ph-fill ph-calendar-heart nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Calendar</span>
+    <button onclick="setView('global_calendar')" id="mob-nav-calendar" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
+      <i class="ph-fill ph-calendar-blank nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Calendar</span>
     </button>
-    <button onclick="openAddModal()" aria-label="Add quest" class="flex items-center justify-center -translate-y-5 w-14 h-14 bg-brand-pink text-white rounded-full shadow-lg active:scale-95 transition-all shrink-0 border-4 border-white bouncy-btn">
+    <button onclick="openAddModal()" class="flex items-center justify-center -translate-y-5 w-14 h-14 bg-brand-pink text-white rounded-full shadow-lg active:scale-95 transition-all shrink-0 border-[3px] border-white bouncy-btn">
       <i class="ph-bold ph-plus text-2xl"></i>
     </button>
-    <button onclick="setView('stats', null, this)" data-view="stats" class="nav-item flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
-      <i class="ph-fill ph-chart-line-up nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Stats</span>
+    <button onclick="setView('shop')" id="mob-nav-shop" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
+      <i class="ph-fill ph-storefront nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Shop</span>
     </button>
-    <button onclick="setView('insights', null, this)" data-view="insights" class="nav-item flex flex-col items-center p-2 w-14 gap-1 transition-all bouncy-btn">
-      <i class="ph-fill ph-squares-four nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Insights</span>
+    <button onclick="setView('stats')" id="mob-nav-stats" class="nav-item flex flex-col items-center p-2 w-16 gap-1 bouncy-btn mobile-nav">
+      <i class="ph-fill ph-chart-line-up nav-ic text-2xl transition-transform"></i><span class="text-[10px] font-display font-bold">Stats</span>
     </button>
   </nav>
 </main>
 
-<div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-brand-ink/90 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-base shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[70] translate-y-4 max-w-[92vw] border border-white/20">
-  <i class="ph-fill ph-sparkle text-xl text-brand-yellow animate-bounce"></i> <span id="toastMsg" class="truncate"></span>
-  <button id="toastAction" class="hidden ml-2 bg-white/20 px-3 py-1 rounded-full text-xs hover:scale-105 transition-all shrink-0 bouncy-btn" onclick="handleUndo()">Undo</button>
-</div>
-
-<div id="achievement" class="fixed top-24 md:top-8 right-4 md:right-8 left-4 md:left-auto bg-white/90 backdrop-blur-2xl border-2 border-white p-4 rounded-3xl shadow-float flex items-center gap-4 transition-all duration-500 translate-x-[160%] z-[70] md:max-w-sm">
-  <div id="achIcon" class="text-5xl drop-shadow-md shrink-0 animate-wiggle">🏆</div>
-  <div>
-    <div id="achTitle" class="font-display font-bold text-xl leading-tight text-brand-purple mb-0.5"></div>
-    <div id="achSub" class="text-xs font-bold text-brand-muted leading-tight"></div>
-  </div>
+<div id="toast" class="fixed bottom-28 md:bottom-10 left-1/2 -translate-x-1/2 bg-brand-ink/95 backdrop-blur-md text-white px-6 py-3.5 rounded-full font-display font-bold text-sm shadow-float flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none z-[200] translate-y-4 max-w-[90vw] border border-white/20 whitespace-nowrap">
+  <i class="ph-fill ph-sparkle text-lg text-brand-yellow animate-bounce"></i> <span id="toastMsg" class="truncate"></span>
 </div>
 
 <script>
 const COLORS = ['#FF4D6D', '#FF8A5B', '#FEE440', '#00F5D4', '#00BBF9', '#9B5DE5', '#F15BB5', '#6D28D9', '#33D2FF', '#F97316'];
 const EMOJIS = ['🚀', '🎯', '💪', '🧠', '💧', '🥗', '🏃', '🧘', '📚', '🎨', '🎵', '⭐', '💰', '😴', '🐱', '☕', '🌱', '🏔️', '🏆', '🔥'];
-const JOURNEY = [
-  "Every quest begins with a single brave step! 🐾",
-  "First week done! Your quest power is soaring high! ⚡",
-  "Momentum unlocked! Keep the magic going strong! 🪄",
-  "A whole month! You are becoming a master hero! 👑",
-  "Halfway to hero legendary status. Amazing work! ⭐",
-  "Home stretch! You are completely unstoppable now! 🔥",
-  "So close! One last push to legendary victory! ⚔️",
-  "Quest mastered! This magic habit is now a permanent part of you! 🏆"
-];
 const DOW_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 let _supabase = null;
 let habits = [];
 let activeId = null;
-let currentView = 'today';
+let currentView = 'dashboard';
 let editingId = null;
 let selectedEmoji = EMOJIS[0];
 let selectedColor = COLORS[0];
 let reminderEnabled = false;
 let calMonth = new Date();
-let prevRepsState = {};
-let pendingDelete = null;
-let deleteTimeout = null;
 let notesEditingDate = null;
 let syncState = 'idle';
 let dirtyIds = new Set();
@@ -487,44 +441,44 @@ function saveProfile() {
 function addXp(amount) {
   profile.xp = Math.max(0, (profile.xp || 0) + amount);
   saveProfile();
-  updateXpWidgets();
+  updateCoinBadge();
 }
 
 function addCoins(amount) {
   profile.coins = Math.max(0, (profile.coins || 0) + amount);
   saveProfile();
-  updateXpWidgets();
+  updateCoinBadge();
 }
 
 const SHOP_ITEMS = [
-  { id: 'shield_1', emoji: '🛡️', name: 'Magic Shield', desc: 'Adds +1 Shield to your active quest so a missed day won\'t break your streak.', cost: 40, effect: 'shield', amount: 1 },
-  { id: 'shield_3', emoji: '🛡️✨', name: 'Shield Pack', desc: 'Adds +3 Shields to your active quest all at once. Best value!', cost: 100, effect: 'shield', amount: 3 },
-  { id: 'freeze_streak', emoji: '❄️', name: 'Streak Freeze', desc: 'Instantly marks today as complete for your active quest using a shield-style save.', cost: 60, effect: 'freeze', amount: 1 }
+  { id: 'shield_1', emoji: '🛡️', name: 'Magic Shield', desc: '+1 Shield to active quest.', cost: 40, effect: 'shield', amount: 1 },
+  { id: 'shield_3', emoji: '🛡️✨', name: 'Shield Pack', desc: '+3 Shields to active quest.', cost: 100, effect: 'shield', amount: 3 },
+  { id: 'freeze_streak', emoji: '❄️', name: 'Streak Freeze', desc: 'Instantly mark today safe.', cost: 60, effect: 'freeze', amount: 1 }
 ];
 
 function buyShopItem(itemId) {
   const item = SHOP_ITEMS.find(i => i.id === itemId);
   if (!item) return;
-  const h = getHabit(activeId) || habits[0];
-  if (!h) { showToast('Add a quest first before shopping! 🗺️'); return; }
-  if ((profile.coins || 0) < item.cost) { showToast('Not enough coins yet! Keep questing 💰'); return; }
-
+  const h = activeId && activeId !== 'dashboard' && activeId !== 'global_calendar' && activeId !== 'shop' && activeId !== 'stats' ? getHabit(activeId) : habits[0];
+  if (!h) { showToast('Add a quest first! 🗺️'); return; }
+  if ((profile.coins || 0) < item.cost) { showToast('Not enough coins! 💰'); return; }
+  
   addCoins(-item.cost);
-
   if (item.effect === 'shield') {
     h.shieldBank = (h.shieldBank || 0) + item.amount;
-    showToast(`${item.name} purchased! +${item.amount} 🛡️`);
+    showToast(`+${item.amount} Shield for ${h.name} 🛡️`);
   } else if (item.effect === 'freeze') {
     const todayStr = getTodayStr();
     if (!h.log) h.log = {};
     if (!h.log[todayStr]) {
       h.log[todayStr] = 'shield';
-      showToast('Streak Freeze used! Today is safe ❄️');
+      showToast(`${h.name} frozen today ❄️`);
     } else {
-      showToast('Today is already logged! ❄️');
+      showToast('Today already logged! ❄️');
+      addCoins(item.cost);
+      return;
     }
   }
-
   syncHabitToCloud(h);
   renderContent();
 }
@@ -543,10 +497,7 @@ function ensureProfileInitialized() {
   let totalCompletions = 0;
   habits.forEach(h => {
     if (h.type === 'break') return;
-    totalCompletions += Object.keys(h.log || {}).filter(k => {
-      const v = h.log[k];
-      return typeof v === 'number' ? v > 0 : v === true;
-    }).length;
+    totalCompletions += Object.keys(h.log || {}).filter(k => typeof h.log[k] === 'number' ? h.log[k] > 0 : h.log[k] === true).length;
   });
   profile.xp = Math.max(profile.xp || 0, totalCompletions * 10);
   profile.coins = Math.max(profile.coins || 0, totalCompletions * 2);
@@ -554,14 +505,8 @@ function ensureProfileInitialized() {
   saveProfile();
 }
 
-function updateXpWidgets() {
-  if (currentView === 'stats' || currentView === 'shop') renderContent();
-  updateCoinBadge();
-}
-
 function updateCoinBadge() {
-  const badges = document.querySelectorAll('.coinBadgeValue');
-  badges.forEach(b => { b.textContent = profile.coins || 0; });
+  document.querySelectorAll('.coinBadgeValue').forEach(b => { b.textContent = profile.coins || 0; });
 }
 
 const haptic = (p) => { if (navigator.vibrate) navigator.vibrate(p); };
@@ -571,46 +516,10 @@ function generateHabitId() {
   return 'h_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
 }
 
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('sidebarOverlay');
-  const icon = document.getElementById('sidebarToggleIcon');
-  const isMobile = window.innerWidth < 768;
-
-  if (isMobile) {
-    if (sidebar.classList.contains('-translate-x-full')) {
-      sidebar.classList.remove('-translate-x-full');
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-    } else {
-      sidebar.classList.add('-translate-x-full');
-      overlay.classList.add('opacity-0', 'pointer-events-none');
-    }
-  } else {
-    if (sidebar.classList.contains('md:w-64')) {
-      sidebar.classList.remove('md:w-64');
-      sidebar.classList.add('md:w-20');
-      icon.classList.remove('ph-caret-left');
-      icon.classList.add('ph-caret-right');
-      document.querySelectorAll('.sidebar-text').forEach(el => el.classList.add('hidden'));
-      document.getElementById('sidebarTitle').classList.add('hidden');
-    } else {
-      sidebar.classList.remove('md:w-20');
-      sidebar.classList.add('md:w-64');
-      icon.classList.remove('ph-caret-right');
-      icon.classList.add('ph-caret-left');
-      document.querySelectorAll('.sidebar-text').forEach(el => el.classList.remove('hidden'));
-      document.getElementById('sidebarTitle').classList.remove('hidden');
-    }
-  }
-}
-
 function checkSetup() {
   const sbUrl = localStorage.getItem('SB_URL');
   const sbKey = localStorage.getItem('SB_KEY');
-  if (!sbUrl || !sbKey) {
-    document.getElementById('setupModal').classList.add('open');
-    return;
-  }
+  if (!sbUrl || !sbKey) { document.getElementById('setupModal').classList.add('open'); return; }
   initSupabase(sbUrl, sbKey);
 }
 
@@ -622,14 +531,11 @@ function handleSetupSubmit() {
     localStorage.setItem('SB_KEY', key);
     document.getElementById('setupModal').classList.remove('open');
     initSupabase(url, key);
-  } else {
-    showToast('Please fill in both fields! 🌟');
-  }
+  } else { showToast('Fill in both fields! 🌟'); }
 }
 
 function initSupabase(url, key) {
   _supabase = supabase.createClient(url, key);
-  setDatePill();
   loadDataFromCloud();
 }
 
@@ -638,76 +544,52 @@ async function loadDataFromCloud() {
   const { data, error } = await _supabase.from('habits').select('*').order('createdAt', { ascending: true });
   if (error) {
     setSyncStatus('error');
-    document.getElementById('content').innerHTML = `<div class="text-center p-10 font-display font-bold text-brand-muted text-xl">Could not reach the quest book. Try checking your internet keys! 🔮</div>`;
+    document.getElementById('content').innerHTML = `<div class="p-10 font-bold text-brand-muted text-center">Sync Error. Check your internet or keys.</div>`;
     return;
   }
   habits = data || [];
-  habits.forEach(h => {
-    h.shieldBank = h.freezeBank !== undefined ? h.freezeBank : 2;
-  });
-  if (habits.length > 0 && !activeId) activeId = habits[0].id;
-  dirtyIds.clear();
-  dirtyDeletes = [];
-  ensureProfileInitialized();
-  runDailyCheckIn();
-  updateCoinBadge();
-  renderAll();
-  setSyncStatus('synced');
+  habits.forEach(h => { h.shieldBank = h.freezeBank !== undefined ? h.freezeBank : 2; });
+  dirtyIds.clear(); dirtyDeletes = [];
+  ensureProfileInitialized(); runDailyCheckIn(); updateCoinBadge(); renderAll(); setSyncStatus('synced');
 }
 
 function formatDateLocal(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+function getTodayStr() { return formatDateLocal(new Date()); }
+
 function runDailyCheckIn() {
   const todayStr = getTodayStr();
   const lastCheckIn = localStorage.getItem('lastCheckInDate');
   if (lastCheckIn === todayStr) return;
   localStorage.setItem('lastCheckInDate', todayStr);
-
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
   const yStr = formatDateLocal(yesterday);
-  const twoDaysAgo = new Date();
-  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+  const twoDaysAgo = new Date(); twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
   const twoStr = formatDateLocal(twoDaysAgo);
-
   let shieldsUsed = 0;
   habits.forEach(h => {
     if (h.type === 'break') return;
     if (!h.log) h.log = {};
-    const missedYesterday = !h.log[yStr];
-    const wasOnStreak = !!h.log[twoStr];
-    if (missedYesterday && wasOnStreak && (h.shieldBank || 0) > 0) {
-      h.log[yStr] = 'shield';
-      h.shieldBank = (h.shieldBank || 0) - 1;
-      shieldsUsed++;
-      syncHabitToCloud(h);
+    if (!h.log[yStr] && h.log[twoStr] && (h.shieldBank || 0) > 0) {
+      h.log[yStr] = 'shield'; h.shieldBank -= 1; shieldsUsed++; syncHabitToCloud(h);
     }
   });
-
-  if (shieldsUsed > 0) {
-    showToast('Shield Saved Your Streak! 🛡️');
-  }
+  if (shieldsUsed > 0) showToast('Shield Saved Your Streak! 🛡️');
 }
 
 function setSyncStatus(state) {
   syncState = state;
-  const dot = document.getElementById('connDot');
-  const dot2 = document.getElementById('connDot2');
-  const label = document.getElementById('connLabel');
-  const label2 = document.getElementById('connLabel2');
+  const dot = document.getElementById('connDot'); const label = document.getElementById('connLabel');
   const icon = document.getElementById('forceSyncIcon');
-  const icon2 = document.getElementById('forceSyncIcon2');
   if (!dot) return;
-  const dirtyCount = dirtyIds.size + dirtyDeletes.length;
-  let color = '#00F5D4', text = 'All Saved! 🎉';
-  if (state === 'syncing') { color = '#FEE440'; text = 'Syncing Magic...'; }
-  else if (state === 'error') { color = '#FF4D6D'; text = dirtyCount ? `${dirtyCount} pending` : 'Sync error'; }
+  let color = '#00F5D4', text = 'All Saved!';
+  if (state === 'syncing') { color = '#FEE440'; text = 'Syncing...'; }
+  else if (state === 'error') { color = '#FF4D6D'; text = 'Sync error'; }
   else if (!navigator.onLine) { color = '#FF4D6D'; text = 'Offline Mode'; }
-  [dot, dot2].forEach(d => d && (d.style.background = color));
-  [label, label2].forEach(l => l && (l.textContent = text));
-  [icon, icon2].forEach(i => i && i.classList.toggle('animate-spin-slow', state === 'syncing'));
+  dot.style.background = color; label.textContent = text;
+  icon.classList.toggle('animate-spin-slow', state === 'syncing');
 }
 
 async function syncHabitToCloud(habit) {
@@ -721,24 +603,14 @@ async function syncHabitToCloud(habit) {
       freezeBank: habit.shieldBank !== undefined ? habit.shieldBank : 2, createdAt: habit.createdAt
     };
     const { data, error } = await _supabase.from('habits').upsert(dbHabit).select();
-    if (error) { 
-      dirtyIds.add(habit.id); 
-      setSyncStatus('error'); 
-      showToast('Could not save quest to the cloud! ⚠️ ' + (error.message || ''));
-    } else { 
-      dirtyIds.delete(habit.id); 
-      if (data && data.length > 0) {
-        const oldId = habit.id;
-        const newId = data[0].id;
-        if (oldId !== newId) {
-          habit.id = newId;
-          if (activeId === oldId) {
-            activeId = newId;
-          }
-        }
+    if (error) { dirtyIds.add(habit.id); setSyncStatus('error'); }
+    else {
+      dirtyIds.delete(habit.id);
+      if (data && data.length > 0 && habit.id !== data[0].id) {
+        if (activeId === habit.id) activeId = data[0].id;
+        habit.id = data[0].id;
       }
       setSyncStatus('synced');
-      renderAll();
     }
   } catch (e) { dirtyIds.add(habit.id); setSyncStatus('error'); }
 }
@@ -748,8 +620,7 @@ async function deleteHabitFromCloud(id) {
   if (!_supabase) return;
   try {
     const { error } = await _supabase.from('habits').delete().eq('id', id);
-    if (error) { dirtyDeletes.push(id); setSyncStatus('error'); }
-    else { setSyncStatus('synced'); }
+    if (error) { dirtyDeletes.push(id); setSyncStatus('error'); } else { setSyncStatus('synced'); }
   } catch (e) { dirtyDeletes.push(id); setSyncStatus('error'); }
 }
 
@@ -759,30 +630,19 @@ function forceSync() {
   dirtyDeletes.forEach(id => deleteHabitFromCloud(id));
 }
 
-function getTodayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-
-function setDatePill() {
-  const options = { weekday: 'short', month: 'short', day: 'numeric' };
-  document.querySelector('#datePill span').textContent = new Date().toLocaleDateString('en-US', options);
-}
-
 function createParticles(e) {
   const container = document.body;
   const rect = e.currentTarget.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  for (let i = 0; i < 16; i++) {
+  const x = e.clientX || rect.left + rect.width/2;
+  const y = e.clientY || rect.top + rect.height/2;
+  for (let i = 0; i < 12; i++) {
     const p = document.createElement('div');
     p.classList.add('particle');
     p.style.backgroundColor = COLORS[Math.floor(Math.random() * COLORS.length)];
-    p.style.width = p.style.height = `${Math.floor(Math.random() * 10) + 8}px`;
-    p.style.left = `${e.clientX}px`;
-    p.style.top = `${e.clientY}px`;
+    p.style.width = p.style.height = `${Math.floor(Math.random() * 8) + 6}px`;
+    p.style.left = `${x}px`; p.style.top = `${y}px`;
     const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 90 + 40;
+    const speed = Math.random() * 80 + 30;
     p.style.setProperty('--tx', `${Math.cos(angle) * speed}px`);
     p.style.setProperty('--ty', `${Math.sin(angle) * speed}px`);
     container.appendChild(p);
@@ -791,12 +651,12 @@ function createParticles(e) {
 }
 
 function triggerConfetti() {
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < 30; i++) {
     const c = document.createElement('div');
     c.classList.add('confetti');
     c.innerText = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
     const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * 220 + 80;
+    const distance = Math.random() * 200 + 80;
     c.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
     c.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
     c.style.setProperty('--rot', `${Math.random() * 360}deg`);
@@ -805,118 +665,282 @@ function triggerConfetti() {
   }
 }
 
-function renderAll() {
-  renderSidebar();
-  renderContent();
-}
+function getHabit(id) { return habits.find(x => x.id === id); }
 
-function renderSidebar() {
-  const desktopContainer = document.getElementById('habitListDesktop');
-  const mobileStrip = document.getElementById('mobileStrip');
-  if (!desktopContainer || !mobileStrip) return;
-
-  if (habits.length === 0) {
-    desktopContainer.innerHTML = `<div class="text-center py-8 text-sm font-bold text-brand-muted sidebar-text">No quests unlocked.</div>`;
-    mobileStrip.innerHTML = `<div class="text-center py-2 text-xs font-bold text-brand-muted w-full">Tap + to start a quest!</div>`;
-    return;
-  }
-
-  let desktopHtml = '';
-  let mobileHtml = '';
-
-  habits.forEach(h => {
-    const activeClass = h.id === activeId ? 'bg-white/70 shadow-md border-brand-purple' : 'bg-white/20 border-transparent';
-    desktopHtml += `
-      <div onclick="selectHabit('${h.id}')" class="flex items-center gap-3 p-3 rounded-2xl border-2 hover:bg-white/50 cursor-pointer transition-all bouncy-btn ${activeClass}">
-        <div class="text-2xl">${h.emoji || '⭐'}</div>
-        <div class="flex-1 min-w-0 sidebar-text">
-          <div class="font-display font-bold text-sm truncate text-brand-ink">${h.name}</div>
-          <div class="text-[10px] font-black text-brand-muted uppercase">${h.type}</div>
-        </div>
-        <button onclick="event.stopPropagation(); openEditModal('${h.id}')" class="text-brand-muted hover:text-brand-purple p-1 sidebar-text">
-          <i class="ph-bold ph-pencil-simple-line text-base"></i>
-        </button>
-      </div>
-    `;
-
-    const mActiveClass = h.id === activeId ? 'bg-brand-purple text-white scale-105 shadow-md' : 'bg-white/50 text-brand-ink';
-    mobileHtml += `
-      <div onclick="selectHabit('${h.id}')" class="snap-center shrink-0 px-4 py-2.5 rounded-2xl font-display font-bold text-sm flex items-center gap-2 border-2 border-white/60 transition-all ${mActiveClass}">
-        <span>${h.emoji || '⭐'}</span>
-        <span class="max-w-[100px] truncate">${h.name}</span>
-      </div>
-    `;
+function setView(view, hId = null) {
+  currentView = view;
+  if (hId) activeId = hId;
+  haptic(10);
+  
+  document.querySelectorAll('.desktop-nav').forEach(el => {
+    el.classList.toggle('bg-white/70', el.id === `nav-${view}`);
+    el.classList.toggle('text-brand-purple', el.id === `nav-${view}`);
+  });
+  
+  document.querySelectorAll('.mobile-nav').forEach(el => {
+    el.classList.toggle('active', el.id === `mob-nav-${view}`);
   });
 
-  desktopContainer.innerHTML = desktopHtml;
-  mobileStrip.innerHTML = mobileHtml;
-}
-
-function selectHabit(id) {
-  activeId = id;
-  haptic(12);
-  renderAll();
-}
-
-function setView(view, tabBtn, navBtn) {
-  currentView = view;
-  haptic(10);
-  document.querySelectorAll('.tab-pill').forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === view));
-  document.querySelectorAll('.nav-item').forEach(b => b.classList.toggle('active', b.getAttribute('data-view') === view));
+  renderSidebarList();
   renderContent();
 }
 
-function getHabit(id) {
-  return habits.find(x => x.id === id);
+function renderSidebarList() {
+  const container = document.getElementById('sidebarHabitList');
+  if (!container) return;
+  if (habits.length === 0) {
+    container.innerHTML = `<div class="px-3 py-2 text-xs text-brand-muted font-bold">No quests yet.</div>`;
+    return;
+  }
+  container.innerHTML = habits.map(h => {
+    const active = currentView === 'habit_detail' && activeId === h.id;
+    return `
+      <div onclick="setView('habit_detail', '${h.id}')" class="flex items-center gap-3 px-3 py-2.5 rounded-2xl cursor-pointer transition-all bouncy-btn ${active ? 'bg-white/80 shadow-sm border border-white text-brand-purple' : 'hover:bg-white/50 text-brand-ink'}">
+        <span class="text-xl">${h.emoji}</span>
+        <span class="font-bold text-sm truncate flex-1">${h.name}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAll() {
+  renderSidebarList();
+  renderContent();
 }
 
 function renderContent() {
   const content = document.getElementById('content');
   if (!content) return;
-
-  if (currentView === 'shop') {
-    renderShopView(content);
-    return;
-  }
-
-  if (habits.length === 0) {
+  if (habits.length === 0 && currentView !== 'shop' && currentView !== 'stats') {
     content.innerHTML = `
       <div class="flex flex-col items-center justify-center h-full text-center p-6 animate-pop">
         <div class="text-7xl mb-4 animate-float">🗺️</div>
-        <h3 class="font-display text-3xl font-bold mb-2">Your Map is Empty!</h3>
-        <p class="text-brand-muted font-bold max-w-sm mb-6">Create your very first magical habit quest and start earning streak multipliers!</p>
-        <button onclick="openAddModal()" class="px-6 py-4 bg-brand-purple text-white font-display font-bold rounded-2xl shadow-pop bouncy-btn border-2 border-white/20 flex items-center gap-2 text-lg">
-          <i class="ph-bold ph-plus-circle"></i> Summon First Quest
+        <h3 class="font-display text-3xl font-bold mb-2">Map is Empty</h3>
+        <p class="text-brand-muted font-bold max-w-sm mb-6">Create your first quest and earn xp!</p>
+        <button onclick="openAddModal()" class="px-6 py-4 bg-brand-purple text-white font-display font-bold rounded-2xl shadow-md bouncy-btn flex items-center gap-2 text-lg">
+          <i class="ph-bold ph-plus-circle"></i> Summon Quest
         </button>
       </div>
     `;
     return;
   }
+  
+  if (currentView === 'dashboard') renderDashboard(content);
+  else if (currentView === 'global_calendar') renderGlobalCalendar(content);
+  else if (currentView === 'shop') renderShopView(content);
+  else if (currentView === 'stats') renderGlobalStats(content);
+  else if (currentView === 'habit_detail') renderHabitDetail(content);
+}
 
-  const h = getHabit(activeId) || habits[0];
-  if (!h) return;
+function renderDashboard(content) {
+  const todayStr = getTodayStr();
+  let doneCount = 0;
+  let activeCount = 0;
 
-  if (currentView === 'today') {
-    renderTodayView(h, content);
-  } else if (currentView === 'calendar') {
-    renderCalendarView(h, content);
-  } else if (currentView === 'stats') {
-    renderStatsView(h, content);
-  } else if (currentView === 'insights') {
-    renderInsightsView(h, content);
+  const cardsHtml = habits.map(h => {
+    if (h.type !== 'break') activeCount++;
+    const logVal = h.log && h.log[todayStr];
+    let isDone = false;
+    let actionBlock = '';
+    
+    if (h.type === 'multi') {
+      const current = typeof logVal === 'number' ? logVal : 0;
+      const target = h.dailyTarget || 3;
+      if (current >= target) { isDone = true; doneCount++; }
+      actionBlock = `
+        <div class="flex items-center gap-3 bg-white/50 rounded-xl px-2 py-1 border border-white">
+          <button onclick="adjustMultiReps('${h.id}', -1, event)" class="w-8 h-8 flex items-center justify-center font-bold text-brand-ink bouncy-btn rounded-lg hover:bg-white/50">-</button>
+          <span class="font-display font-bold text-lg min-w-[2ch] text-center">${current}</span>
+          <button onclick="adjustMultiReps('${h.id}', 1, event)" class="w-8 h-8 flex items-center justify-center font-bold text-white bg-brand-purple rounded-lg bouncy-btn shadow-sm">+</button>
+        </div>
+      `;
+    } else if (h.type === 'break') {
+      isDone = logVal === true;
+      actionBlock = `
+        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-12 h-12 rounded-xl border-2 flex items-center justify-center text-xl transition-all bouncy-btn ${isDone ? 'bg-brand-red border-brand-red text-white' : 'bg-brand-green/20 border-brand-green text-brand-green hover:bg-brand-green/30'}">
+          ${isDone ? '💥' : '🛡️'}
+        </button>
+      `;
+    } else {
+      isDone = !!logVal;
+      if (isDone) doneCount++;
+      actionBlock = `
+        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-12 h-12 rounded-xl border-2 flex items-center justify-center text-xl transition-all bouncy-btn ${isDone ? 'bg-brand-green border-brand-green text-white shadow-inner' : 'bg-white/80 border-brand-purple hover:bg-white shadow-sm'}">
+          ${isDone ? '✅' : h.emoji}
+        </button>
+      `;
+    }
+
+    const stats = getHabitStats(h);
+    
+    return `
+      <div class="bento-card glass-card p-4 md:p-5 flex items-center gap-4 animate-pop border border-white/80 cursor-pointer" onclick="if(event.target.tagName !== 'BUTTON') setView('habit_detail', '${h.id}')">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0" style="background-color: ${h.color}30">
+          ${h.emoji}
+        </div>
+        <div class="flex-1 min-w-0">
+          <h4 class="font-display font-bold text-lg truncate text-brand-ink">${h.name}</h4>
+          <div class="text-xs font-bold text-brand-muted flex items-center gap-2">
+            <span class="uppercase tracking-wider font-black text-[10px]">${h.type}</span>
+            <span>•</span>
+            <span>${stats.isBreakType ? '🛡️' : '🔥'} ${stats.streak}</span>
+          </div>
+        </div>
+        <div class="shrink-0" onclick="event.stopPropagation()">
+          ${actionBlock}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const pct = activeCount > 0 ? Math.round((doneCount / activeCount) * 100) : 0;
+  const d = new Date();
+  const dateStr = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  content.innerHTML = `
+    <div class="max-w-4xl mx-auto w-full">
+      <div class="flex flex-col md:flex-row gap-6 mb-8 animate-pop">
+        <div class="flex-1">
+          <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-ink mb-1">Welcome back!</h2>
+          <p class="text-brand-muted font-bold text-sm md:text-base">${dateStr}</p>
+        </div>
+        <div class="bento-card glass-card p-5 flex items-center gap-5 border border-white min-w-[240px]">
+          <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-white/50" stroke-width="4" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="text-brand-purple transition-all duration-1000" stroke-dasharray="${pct}, 100" stroke-width="4" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="absolute font-display font-bold text-sm">${pct}%</span>
+          </div>
+          <div>
+            <div class="font-display font-bold text-lg leading-tight">Daily Quests</div>
+            <div class="text-sm font-bold text-brand-muted">${doneCount} of ${activeCount} done</div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        ${cardsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderGlobalCalendar(content) {
+  const currentMonthIdx = calMonth.getMonth();
+  const currentYear = calMonth.getFullYear();
+  const firstDay = new Date(currentYear, currentMonthIdx, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonthIdx + 1, 0).getDate();
+  const todayStr = getTodayStr();
+
+  let gridHtml = '';
+  for (let i = 0; i < firstDay; i++) { gridHtml += `<div></div>`; }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dStr = `${currentYear}-${String(currentMonthIdx+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    let compCount = 0;
+    let activeCount = 0;
+    
+    habits.forEach(h => {
+      if (h.type === 'break') return;
+      activeCount++;
+      const val = h.log ? h.log[dStr] : null;
+      if (val === 'shield' || val === true || (typeof val === 'number' && val > 0)) compCount++;
+    });
+
+    let intensity = 0;
+    if (activeCount > 0 && compCount > 0) {
+      const ratio = compCount / activeCount;
+      if (ratio > 0.75) intensity = 4;
+      else if (ratio > 0.5) intensity = 3;
+      else if (ratio > 0.25) intensity = 2;
+      else intensity = 1;
+    }
+
+    const isToday = dStr === todayStr;
+    const ring = isToday ? 'ring-2 ring-brand-ink ring-offset-2 ring-offset-[#FFDEE9]' : '';
+
+    gridHtml += `
+      <div class="aspect-square rounded-xl md:rounded-2xl border flex items-center justify-center font-display font-bold text-sm transition-all heat-${intensity} ${ring}">
+        ${day}
+      </div>
+    `;
   }
+
+  content.innerHTML = `
+    <div class="max-w-3xl mx-auto w-full animate-pop">
+      <div class="bento-card glass-card p-6 md:p-8 border border-white">
+        <div class="flex justify-between items-center mb-8">
+          <button onclick="adjustCalMonth(-1)" class="w-11 h-11 rounded-xl bg-white/60 flex items-center justify-center border border-white bouncy-btn shadow-sm"><i class="ph-bold ph-caret-left"></i></button>
+          <h3 class="font-display text-2xl font-bold text-brand-ink">${calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
+          <button onclick="adjustCalMonth(1)" class="w-11 h-11 rounded-xl bg-white/60 flex items-center justify-center border border-white bouncy-btn shadow-sm"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+        <div class="grid grid-cols-7 gap-2 md:gap-3 text-center mb-3">
+          ${DOW_LABELS.map(l => `<div class="text-[10px] md:text-xs font-black uppercase tracking-wider text-brand-muted font-display">${l}</div>`).join('')}
+        </div>
+        <div class="grid grid-cols-7 gap-2 md:gap-3">
+          ${gridHtml}
+        </div>
+        <div class="mt-8 flex justify-center items-center gap-3 text-xs font-bold text-brand-ink">
+          <span>Less</span>
+          <div class="w-4 h-4 rounded heat-0"></div>
+          <div class="w-4 h-4 rounded heat-1"></div>
+          <div class="w-4 h-4 rounded heat-2"></div>
+          <div class="w-4 h-4 rounded heat-3"></div>
+          <div class="w-4 h-4 rounded heat-4"></div>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderGlobalStats(content) {
+  const lvl = getLevelInfo();
+  let totalCompletions = 0;
+  habits.forEach(h => {
+    if (h.type !== 'break') totalCompletions += Object.keys(h.log || {}).filter(k => h.log[k]).length;
+  });
+
+  content.innerHTML = `
+    <div class="max-w-4xl mx-auto w-full animate-pop space-y-6">
+      <div class="bento-card glass-card p-8 border border-white bg-gradient-to-br from-white/60 to-brand-yellowSoft text-center">
+        <div class="text-6xl mb-4 animate-float">🎖️</div>
+        <h3 class="font-display text-3xl font-bold text-brand-ink mb-2">Hero Level ${lvl.level}</h3>
+        <div class="max-w-md mx-auto">
+          <div class="flex justify-between text-xs font-black text-brand-muted mb-2 px-1">
+            <span>XP: ${lvl.xp}</span>
+            <span>Next: ${lvl.xpForNext}</span>
+          </div>
+          <div class="w-full bg-white/50 h-5 rounded-full overflow-hidden border border-white/60">
+            <div class="bg-gradient-to-r from-brand-yellow to-brand-orange h-full transition-all duration-500" style="width: ${lvl.pct}%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bento-card glass-card p-5 text-center border border-white flex flex-col items-center">
+          <div class="text-3xl mb-2">✨</div>
+          <div class="font-display font-bold text-2xl text-brand-pink font-num">${totalCompletions}</div>
+          <div class="text-[10px] font-black uppercase tracking-wider text-brand-muted mt-1">Total Wins</div>
+        </div>
+        <div class="bento-card glass-card p-5 text-center border border-white flex flex-col items-center">
+          <div class="text-3xl mb-2">🗺️</div>
+          <div class="font-display font-bold text-2xl text-brand-blue font-num">${habits.length}</div>
+          <div class="text-[10px] font-black uppercase tracking-wider text-brand-muted mt-1">Active Quests</div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function renderShopView(content) {
-  const activeHabit = getHabit(activeId) || habits[0];
   const cardsHtml = SHOP_ITEMS.map(item => {
     const affordable = (profile.coins || 0) >= item.cost;
     return `
-      <div class="bento-card glass-card p-5 flex flex-col border border-white ${affordable ? '' : 'opacity-60'}">
-        <div class="text-4xl mb-2">${item.emoji}</div>
-        <h4 class="font-display text-lg font-bold text-brand-ink mb-1">${item.name}</h4>
-        <p class="text-xs font-bold text-brand-muted mb-4 flex-1">${item.desc}</p>
-        <button onclick="buyShopItem('${item.id}')" class="w-full py-3 rounded-2xl font-display font-bold bouncy-btn transition-all ${affordable ? 'bg-brand-purple text-white shadow-md hover:brightness-105' : 'bg-gray-200/60 text-brand-muted cursor-not-allowed'}">
+      <div class="bento-card glass-card p-6 flex flex-col border border-white ${affordable ? '' : 'opacity-70'}">
+        <div class="text-4xl mb-3">${item.emoji}</div>
+        <h4 class="font-display text-xl font-bold text-brand-ink mb-2">${item.name}</h4>
+        <p class="text-sm font-bold text-brand-muted mb-6 flex-1">${item.desc}</p>
+        <button onclick="buyShopItem('${item.id}')" class="w-full py-4 rounded-2xl font-display font-bold text-lg bouncy-btn transition-all ${affordable ? 'bg-brand-purple text-white shadow-md hover:brightness-105' : 'bg-gray-200/60 text-brand-muted cursor-not-allowed'}">
           💰 ${item.cost} Coins
         </button>
       </div>
@@ -924,255 +948,147 @@ function renderShopView(content) {
   }).join('');
 
   content.innerHTML = `
-    <div class="animate-pop">
-      <div class="bento-card glass-card p-6 mb-6 border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft flex items-center justify-between flex-wrap gap-3">
+    <div class="max-w-5xl mx-auto w-full animate-pop">
+      <div class="bento-card glass-card p-6 md:p-8 mb-6 border border-white bg-gradient-to-br from-white/40 to-brand-purpleSoft flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
         <div>
-          <h3 class="font-display text-2xl font-bold text-brand-ink flex items-center gap-2">🛍️ Quest Shop</h3>
-          <p class="text-xs font-bold text-brand-muted mt-1">${activeHabit ? `Purchases apply to "${activeHabit.name}"` : 'Add a quest to start spending coins!'}</p>
+          <h3 class="font-display text-3xl font-bold text-brand-ink mb-1">Quest Shop</h3>
+          <p class="text-sm font-bold text-brand-muted">Spend coins to protect your active quest!</p>
         </div>
-        <div class="flex items-center gap-2 bg-white/70 px-4 py-2 rounded-2xl border border-white/60">
-          <span class="text-xl">💰</span>
-          <span class="font-display font-bold text-xl text-brand-ink coinBadgeValue">${profile.coins || 0}</span>
+        <div class="flex items-center gap-3 bg-white/90 px-6 py-3 rounded-3xl border border-white shadow-sm">
+          <span class="text-2xl">💰</span>
+          <span class="font-display font-bold text-3xl text-brand-ink coinBadgeValue">${profile.coins || 0}</span>
         </div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         ${cardsHtml}
       </div>
     </div>
   `;
 }
 
-function renderTodayView(h, content) {
+function renderHabitDetail(content) {
+  const h = getHabit(activeId);
+  if (!h) { setView('dashboard'); return; }
   const todayStr = getTodayStr();
-  const currentReps = h.log && h.log[todayStr] ? (typeof h.log[todayStr] === 'number' ? h.log[todayStr] : 1) : 0;
-  const isDone = currentReps > 0;
-  
+  const logVal = h.log && h.log[todayStr];
+  let isDone = false;
   let actionBlock = '';
+
   if (h.type === 'multi') {
+    const current = typeof logVal === 'number' ? logVal : 0;
     const target = h.dailyTarget || 3;
-    const pct = Math.min(100, Math.round((currentReps / target) * 100));
+    isDone = current >= target;
     actionBlock = `
-      <div class="text-center py-4 w-full px-2">
-        <div class="font-display font-bold text-5xl text-brand-purple font-num mb-2">${currentReps} / ${target}</div>
-        <p class="text-sm font-bold text-brand-muted mb-6">Reps completed for today's challenge</p>
-        <div class="w-full bg-white/40 h-4 rounded-full overflow-hidden border border-white mb-6">
-          <div class="bg-gradient-to-r from-brand-purple to-brand-pink h-full transition-all duration-500" style="width: ${pct}%"></div>
-        </div>
-        <div class="flex gap-3 justify-center">
-          <button onclick="adjustMultiReps('${h.id}', -1, event)" class="w-14 h-14 bg-white/60 hover:bg-white rounded-2xl flex items-center justify-center border-2 border-white text-xl bouncy-btn shadow-sm"><i class="ph-bold ph-minus"></i></button>
-          <button onclick="adjustMultiReps('${h.id}', 1, event)" class="px-8 h-14 bg-brand-purple text-white font-display font-bold text-lg rounded-2xl flex items-center justify-center gap-2 bouncy-btn shadow-md border-2 border-white/20"><i class="ph-bold ph-plus"></i> Add Rep</button>
+      <div class="flex flex-col items-center py-4">
+        <div class="font-display font-bold text-6xl text-brand-purple font-num mb-6">${current}<span class="text-3xl text-brand-muted/50">/${target}</span></div>
+        <div class="flex gap-4">
+          <button onclick="adjustMultiReps('${h.id}', -1, event)" class="w-16 h-16 bg-white/80 hover:bg-white rounded-2xl flex items-center justify-center border border-white text-2xl bouncy-btn shadow-sm">-</button>
+          <button onclick="adjustMultiReps('${h.id}', 1, event)" class="px-8 h-16 bg-brand-purple text-white font-display font-bold text-xl rounded-2xl flex items-center justify-center gap-2 bouncy-btn shadow-md border border-white/20"><i class="ph-bold ph-plus"></i> Add Rep</button>
         </div>
       </div>
     `;
   } else if (h.type === 'break') {
-    const isBroken = isDone;
+    isDone = logVal === true;
     actionBlock = `
-      <div class="flex flex-col items-center justify-center py-6">
-        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-32 h-32 rounded-full border-4 ${isBroken ? 'bg-brand-red border-white shadow-inner' : 'bg-brand-green border-white shadow-md'} flex items-center justify-center text-5xl transition-all duration-300 bouncy-btn">
-          ${isBroken ? '💥' : '🛡️'}
+      <div class="flex flex-col items-center py-4">
+        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-36 h-36 rounded-full border-[6px] ${isDone ? 'bg-brand-red border-white shadow-inner' : 'bg-brand-green border-white shadow-md hover:scale-105'} flex items-center justify-center text-6xl transition-all duration-300 bouncy-btn">
+          ${isDone ? '💥' : '🛡️'}
         </button>
-        <div class="mt-4 font-display font-bold text-xl text-brand-ink">${isBroken ? 'Shield Broken Today 💔' : 'Staying Strong! Tap only if you slip'}</div>
+        <div class="mt-6 font-display font-bold text-xl text-brand-ink">${isDone ? 'Shield Broken 💔' : 'Staying Strong! Tap if you slip'}</div>
       </div>
     `;
   } else {
+    isDone = !!logVal;
     actionBlock = `
-      <div class="flex flex-col items-center justify-center py-6">
-        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-32 h-32 rounded-full border-4 ${isDone ? 'bg-brand-green border-white shadow-inner' : 'bg-white/80 border-brand-purple shadow-md'} flex items-center justify-center text-5xl transition-all duration-300 bouncy-btn">
+      <div class="flex flex-col items-center py-4">
+        <button onclick="toggleSingleHabit('${h.id}', event)" class="w-36 h-36 rounded-full border-[6px] ${isDone ? 'bg-brand-green border-white shadow-inner' : 'bg-white/90 border-brand-purple shadow-md hover:scale-105'} flex items-center justify-center text-6xl transition-all duration-300 bouncy-btn">
           ${isDone ? '✅' : h.emoji}
         </button>
-        <div class="mt-4 font-display font-bold text-xl text-brand-ink">${isDone ? 'Quest Completed! 🎉' : 'Tap to Complete! ✨'}</div>
+        <div class="mt-6 font-display font-bold text-xl text-brand-ink">${isDone ? 'Completed! 🎉' : 'Tap to Complete! ✨'}</div>
       </div>
     `;
   }
 
   const stats = getHabitStats(h);
-  const streak = stats.streak;
-  const totalWins = stats.totalWins;
-
-  content.innerHTML = `
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pop">
-      
-      <div class="md:col-span-2 bento-card glass-card p-6 flex flex-col justify-between border border-white">
-        <div class="flex items-center gap-4 mb-4">
-          <div class="text-5xl animate-float">${h.emoji}</div>
-          <div>
-            <h2 class="font-display text-3xl font-bold tracking-tight text-brand-ink">${h.name}</h2>
-            <div class="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-brand-purpleSoft text-brand-purple border border-brand-purple/20 mt-1">${h.type} quest</div>
-          </div>
-        </div>
-        <div class="flex-1 flex items-center justify-center bg-white/20 rounded-3xl p-4 border border-white/40 my-2">
-          ${actionBlock}
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 md:grid-cols-1 gap-6">
-        
-        <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft">
-          <div class="text-4xl mb-1">${stats.isBreakType ? '🛡️' : '🔥'}</div>
-          <div class="font-display font-bold text-4xl text-brand-orange font-num">${streak}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${stats.isBreakType ? 'Days Resisted' : 'Current Streak'}</div>
-        </div>
-
-        <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-blueSoft">
-          <div class="text-4xl mb-1">🛡️</div>
-          <div class="font-display font-bold text-4xl text-brand-blue font-num">${h.shieldBank || 0}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">Magic Shields</div>
-        </div>
-
-      </div>
-
-      <div class="bento-card glass-card p-6 md:col-span-3 border border-white bg-white/30">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-display text-xl font-bold flex items-center gap-2"><i class="ph-fill ph-note-pencil text-brand-pink"></i> Today's Quest Log Diary</h3>
-          <button onclick="openNoteModal('${todayStr}')" class="px-4 py-2 bg-white/80 hover:bg-white rounded-xl font-display font-bold text-xs border border-white/80 flex items-center gap-1 bouncy-btn shadow-sm text-brand-purple">
-            <i class="ph-bold ph-plus"></i> Write Story
-          </button>
-        </div>
-        <div class="p-4 bg-white/40 rounded-2xl border border-white/60 min-h-[64px] flex items-center text-brand-ink font-bold text-sm">
-          ${h.notes && h.notes[todayStr] ? h.notes[todayStr] : 'No notes written down for today yet. Record a happy memory! 🌟'}
-        </div>
-      </div>
-
-    </div>
-  `;
-}
-
-function renderCalendarView(h, content) {
-  const currentMonthIdx = calMonth.getMonth();
-  const currentYear = calMonth.getFullYear();
-  const firstDay = new Date(currentYear, currentMonthIdx, 1).getDay();
-  const daysInMonth = new Date(currentYear, currentMonthIdx + 1, 0).getDate();
-
-  let gridHtml = '';
-  for (let i = 0; i < firstDay; i++) {
-    gridHtml += `<div class="p-3"></div>`;
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dStr = `${currentYear}-${String(currentMonthIdx+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const logVal = h.log ? h.log[dStr] : null;
+  
+  // Specific Calendar HTML
+  const cMonthIdx = calMonth.getMonth();
+  const cYear = calMonth.getFullYear();
+  const fDay = new Date(cYear, cMonthIdx, 1).getDay();
+  const dInMonth = new Date(cYear, cMonthIdx + 1, 0).getDate();
+  let calHtml = '';
+  for (let i = 0; i < fDay; i++) calHtml += `<div></div>`;
+  for (let d = 1; d <= dInMonth; d++) {
+    const dStr = `${cYear}-${String(cMonthIdx+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const lVal = h.log ? h.log[dStr] : null;
     const hasNote = h.notes && h.notes[dStr];
-    const isShielded = logVal === 'shield';
-
-    let cellBg = 'bg-white/40 hover:bg-white/70 border-white/40';
-    let cellText = 'text-brand-ink';
-
+    const isShield = lVal === 'shield';
+    let cellBg = 'bg-white/50 border-white/40 hover:bg-white/80 text-brand-ink';
+    
     if (h.type === 'break') {
-      if (logVal === true) {
-        cellBg = 'bg-brand-red text-white border-brand-red shadow-sm scale-95';
-        cellText = 'text-white';
-      } else {
-        cellBg = 'bg-brand-green/40 hover:bg-brand-green/60 border-brand-green/60';
-      }
-    } else if (logVal) {
-      cellBg = isShielded ? 'bg-brand-blue text-white border-brand-blue shadow-sm scale-95' : 'bg-brand-purple text-white border-brand-purple shadow-sm scale-95';
-      cellText = 'text-white';
+      if (lVal === true) cellBg = 'bg-brand-red text-white border-brand-red shadow-sm scale-[0.95]';
+      else cellBg = 'bg-brand-green/30 border-brand-green/50 hover:bg-brand-green/50 text-brand-ink';
+    } else if (lVal) {
+      cellBg = isShield ? 'bg-brand-blue text-white border-brand-blue shadow-sm scale-[0.95]' : 'bg-brand-purple text-white border-brand-purple shadow-sm scale-[0.95]';
     }
 
-    gridHtml += `
-      <div onclick="openNoteModal('${dStr}')" class="day-cell relative aspect-square rounded-2xl border-2 flex flex-col items-center justify-center font-display font-bold text-sm md:text-base cursor-pointer transition-all bouncy-btn ${cellBg} ${cellText}">
-        <span>${day}</span>
+    calHtml += `
+      <div onclick="openNoteModal('${dStr}')" class="relative aspect-square rounded-xl border flex flex-col items-center justify-center font-display font-bold text-sm cursor-pointer transition-all bouncy-btn ${cellBg}">
+        <span>${d}</span>
         ${hasNote ? '<div class="note-dot"></div>' : ''}
-        ${isShielded ? '<div class="absolute -top-1.5 -right-1.5 text-sm">🛡️</div>' : ''}
+        ${isShield ? '<div class="absolute -top-1 -right-1 text-xs">🛡️</div>' : ''}
       </div>
     `;
   }
 
   content.innerHTML = `
-    <div class="bento-card glass-card p-6 border border-white animate-pop">
-      <div class="flex justify-between items-center mb-6">
-        <button onclick="adjustCalMonth(-1)" class="w-11 h-11 rounded-xl bg-white/60 flex items-center justify-center border border-white bouncy-btn shadow-sm"><i class="ph-bold ph-caret-left"></i></button>
-        <h3 class="font-display text-xl md:text-2xl font-bold text-brand-ink">${calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
-        <button onclick="adjustCalMonth(1)" class="w-11 h-11 rounded-xl bg-white/60 flex items-center justify-center border border-white bouncy-btn shadow-sm"><i class="ph-bold ph-caret-right"></i></button>
-      </div>
-      <div class="grid grid-cols-7 gap-2 text-center mb-2">
-        ${DOW_LABELS.map(l => `<div class="text-xs font-black uppercase tracking-wider text-brand-muted font-display">${l}</div>`).join('')}
-      </div>
-      <div class="grid grid-cols-7 gap-2">
-        ${gridHtml}
-      </div>
-    </div>
-  `;
-}
-
-function renderStatsView(h, content) {
-  const stats = getHabitStats(h);
-  const totalCompletions = stats.totalWins;
-  const streak = stats.streak;
-  const goal = parseInt(h.goal) || 60;
-  const masteryPct = Math.min(100, Math.round((totalCompletions / goal) * 100));
-  const lvl = getLevelInfo();
-  const streakLabel = stats.isBreakType ? 'Days Resisted' : 'Active Streak';
-  const winsLabel = stats.isBreakType ? 'Clean Days' : 'Total Wins';
-  const masteryLabel = stats.isBreakType ? 'Clean days achieved' : 'total completions achieved';
-
-  content.innerHTML = `
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pop">
-
-      <div class="bento-card glass-card p-6 md:col-span-2 border border-white bg-gradient-to-br from-white/40 to-brand-yellowSoft">
-        <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-          <h4 class="font-display text-xl font-bold text-brand-ink flex items-center gap-2">🎖️ Hero Level ${lvl.level}</h4>
-          <span class="text-xs font-black text-brand-muted">${lvl.xpIntoLevel} / ${lvl.xpForNext} XP</span>
-        </div>
-        <div class="w-full bg-white/50 h-5 rounded-full overflow-hidden border border-white/60">
-          <div class="bg-gradient-to-r from-brand-yellow to-brand-orange h-full transition-all duration-500" style="width: ${lvl.pct}%"></div>
-        </div>
-        <p class="text-xs font-bold text-brand-muted mt-2">${lvl.xpForNext - lvl.xpIntoLevel} XP to Level ${lvl.level + 1}! Keep questing across all your habits 🌟</p>
+    <div class="max-w-4xl mx-auto w-full animate-pop space-y-6">
+      <div class="flex items-center justify-between gap-4 mb-2">
+        <button onclick="setView('dashboard')" class="md:hidden w-10 h-10 bg-white/70 rounded-full flex items-center justify-center border border-white shadow-sm bouncy-btn"><i class="ph-bold ph-arrow-left"></i></button>
+        <button onclick="openEditModal('${h.id}')" class="px-4 py-2 bg-white/70 hover:bg-white rounded-xl text-sm font-bold border border-white shadow-sm bouncy-btn flex items-center gap-2 ml-auto"><i class="ph-bold ph-pencil-simple"></i> Edit</button>
       </div>
 
-      <div class="bento-card glass-card p-6 flex flex-col items-center justify-center text-center border border-white bg-gradient-to-br from-white/40 to-brand-purpleSoft">
-        <div class="text-6xl mb-3 animate-float">🏆</div>
-        <h4 class="font-display text-2xl font-bold text-brand-ink mb-1">Quest Mastery Code</h4>
-        <div class="font-display font-bold text-5xl text-brand-purple font-num my-2">${masteryPct}%</div>
-        <div class="w-full bg-white/50 h-4 rounded-full overflow-hidden border border-white/60 max-w-xs mt-2">
-          <div class="bg-brand-purple h-full" style="width: ${masteryPct}%"></div>
-        </div>
-        <p class="text-xs font-bold text-brand-muted mt-3">${totalCompletions} / ${goal} ${masteryLabel}</p>
+      <div class="bento-card glass-card p-8 border border-white text-center flex flex-col items-center">
+        <div class="text-6xl mb-4 p-4 rounded-3xl" style="background-color: ${h.color}30">${h.emoji}</div>
+        <h2 class="font-display text-4xl font-bold text-brand-ink mb-2">${h.name}</h2>
+        <span class="px-3 py-1 bg-brand-purpleSoft text-brand-purple rounded-full text-xs font-black uppercase tracking-wider mb-6">${h.type}</span>
+        ${actionBlock}
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-        <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white">
-          <div class="text-4xl mb-1">${stats.isBreakType ? '🛡️' : '🔥'}</div>
-          <div class="font-display font-bold text-3xl text-brand-orange font-num">${streak}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${streakLabel}</div>
+        <div class="bento-card glass-card p-6 border border-white text-center bg-gradient-to-br from-white/50 to-brand-yellowSoft flex flex-col justify-center">
+          <div class="text-4xl mb-2">${stats.isBreakType ? '🛡️' : '🔥'}</div>
+          <div class="font-display font-bold text-4xl text-brand-orange font-num">${stats.streak}</div>
+          <div class="text-xs font-black uppercase tracking-wider text-brand-muted mt-1">${stats.isBreakType ? 'Days Resisted' : 'Current Streak'}</div>
         </div>
-        <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white">
-          <div class="text-4xl mb-1">✨</div>
-          <div class="font-display font-bold text-3xl text-brand-pink font-num">${totalCompletions}</div>
-          <div class="text-xs font-black uppercase tracking-wider text-brand-muted">${winsLabel}</div>
-        </div>
-        <div class="bento-card glass-card p-5 flex flex-col items-center justify-center text-center border border-white col-span-2 bg-gradient-to-br from-white/40 to-brand-greenSoft">
-          <div class="text-3xl mb-1">🛡️</div>
-          <div class="font-display font-bold text-lg text-brand-ink">${h.shieldBank || 0} Magic Shields Banked</div>
-          <div class="text-[11px] font-bold text-brand-muted mt-0.5">Shields auto-protect a streak if you miss exactly one day!</div>
+        <div class="bento-card glass-card p-6 border border-white text-center bg-gradient-to-br from-white/50 to-brand-blueSoft flex flex-col justify-center">
+          <div class="text-4xl mb-2">🛡️</div>
+          <div class="font-display font-bold text-4xl text-brand-blue font-num">${h.shieldBank || 0}</div>
+          <div class="text-xs font-black uppercase tracking-wider text-brand-muted mt-1">Magic Shields</div>
         </div>
       </div>
 
-    </div>
-  `;
-}
-
-function renderInsightsView(h, content) {
-  const totalCompletions = Object.keys(h.log || {}).length;
-  let quote = JOURNEY[Math.min(JOURNEY.length - 1, Math.floor(totalCompletions / 7))];
-
-  content.innerHTML = `
-    <div class="bento-card glass-card p-8 border border-white text-center max-w-2xl mx-auto animate-pop bg-gradient-to-tr from-brand-pinkSoft via-white/40 to-brand-blueSoft">
-      <div class="text-6xl mb-4 animate-float">🧙‍♂️</div>
-      <h3 class="font-display text-2xl font-bold text-brand-purple mb-4">Wizard Sage Insights</h3>
-      <div class="p-6 bg-white/50 border-2 border-white rounded-3xl text-lg font-bold text-brand-ink shadow-sm italic">
-        "${quote}"
-      </div>
-      <div class="grid grid-cols-2 gap-4 mt-6">
-        <div class="p-4 bg-white/40 border border-white/60 rounded-2xl text-left">
-          <div class="text-2xl mb-1">🌞</div>
-          <div class="font-display font-bold text-sm text-brand-ink">Best Routine Tip</div>
-          <p class="text-xs text-brand-muted font-bold mt-1">Completing quests before noon doubling your magical energy levels!</p>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bento-card glass-card p-6 border border-white bg-white/60">
+          <div class="flex justify-between items-center mb-6">
+            <button onclick="adjustCalMonth(-1)" class="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm bouncy-btn"><i class="ph-bold ph-caret-left"></i></button>
+            <h3 class="font-display text-lg font-bold">${calMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</h3>
+            <button onclick="adjustCalMonth(1)" class="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm bouncy-btn"><i class="ph-bold ph-caret-right"></i></button>
+          </div>
+          <div class="grid grid-cols-7 gap-1.5 text-center mb-2">
+            ${DOW_LABELS.map(l => `<div class="text-[9px] font-black uppercase tracking-wider text-brand-muted">${l}</div>`).join('')}
+          </div>
+          <div class="grid grid-cols-7 gap-1.5">${calHtml}</div>
         </div>
-        <div class="p-4 bg-white/40 border border-white/60 rounded-2xl text-left">
-          <div class="text-2xl mb-1">🛡️</div>
-          <div class="font-display font-bold text-sm text-brand-ink">Shield Multiplier</div>
-          <p class="text-xs text-brand-muted font-bold mt-1">Always keep at least 1 shield token banked to guard your progress.</p>
+        
+        <div class="bento-card glass-card p-6 border border-white flex flex-col bg-white/60">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-display text-lg font-bold"><i class="ph-fill ph-book-open-text text-brand-pink"></i> Today's Story</h3>
+            <button onclick="openNoteModal('${todayStr}')" class="text-brand-purple font-bold text-sm bg-white px-3 py-1.5 rounded-lg shadow-sm border border-white/60 bouncy-btn">+ Write</button>
+          </div>
+          <div class="flex-1 bg-white/50 rounded-2xl p-4 border border-white/60 text-sm font-bold text-brand-ink min-h-[120px]">
+            ${h.notes && h.notes[todayStr] ? h.notes[todayStr] : 'No entry for today yet. Record a memory!'}
+          </div>
         </div>
       </div>
     </div>
@@ -1184,18 +1100,13 @@ function calculateStreak(h) {
   let streak = 0;
   let checkDate = new Date();
   while (true) {
-    const dStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
-    if (h.log[dStr]) {
-      streak++;
-    } else {
+    const dStr = formatDateLocal(checkDate);
+    if (h.log[dStr]) streak++;
+    else {
       if (streak === 0) {
         checkDate.setDate(checkDate.getDate() - 1);
-        const prevStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
-        if (h.log[prevStr]) {
-          streak++;
-          checkDate.setDate(checkDate.getDate() - 1);
-          continue;
-        }
+        const prevStr = formatDateLocal(checkDate);
+        if (h.log[prevStr]) { streak++; checkDate.setDate(checkDate.getDate() - 1); continue; }
       }
       break;
     }
@@ -1206,16 +1117,12 @@ function calculateStreak(h) {
 
 function calculateBreakStreak(h) {
   if (!h.log) h.log = {};
-  const start = h.createdAt ? new Date(h.createdAt) : new Date();
-  start.setHours(0, 0, 0, 0);
-  let checkDate = new Date();
-  checkDate.setHours(0, 0, 0, 0);
+  const start = h.createdAt ? new Date(h.createdAt) : new Date(); start.setHours(0,0,0,0);
+  let checkDate = new Date(); checkDate.setHours(0,0,0,0);
   let streak = 0;
   while (checkDate >= start) {
-    const dStr = formatDateLocal(checkDate);
-    if (h.log[dStr]) break;
-    streak++;
-    checkDate.setDate(checkDate.getDate() - 1);
+    if (h.log[formatDateLocal(checkDate)]) break;
+    streak++; checkDate.setDate(checkDate.getDate() - 1);
   }
   return streak;
 }
@@ -1224,19 +1131,12 @@ function getHabitStats(h) {
   if (h.type === 'break') {
     const streak = calculateBreakStreak(h);
     const brokenDays = Object.keys(h.log || {}).filter(k => h.log[k] === true).length;
-    const start = h.createdAt ? new Date(h.createdAt) : new Date();
-    start.setHours(0, 0, 0, 0);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const totalDays = Math.max(1, Math.floor((today - start) / 86400000) + 1);
-    const totalWins = Math.max(0, totalDays - brokenDays);
-    return { streak, totalWins, brokenDays, isBreakType: true };
+    const start = h.createdAt ? new Date(h.createdAt) : new Date(); start.setHours(0,0,0,0);
+    const totalDays = Math.max(1, Math.floor((new Date().setHours(0,0,0,0) - start) / 86400000) + 1);
+    return { streak, totalWins: Math.max(0, totalDays - brokenDays), brokenDays, isBreakType: true };
   }
   const streak = calculateStreak(h);
-  const totalWins = Object.keys(h.log || {}).filter(k => {
-    const v = h.log[k];
-    return typeof v === 'number' ? v > 0 : v === true;
-  }).length;
+  const totalWins = Object.keys(h.log || {}).filter(k => typeof h.log[k] === 'number' ? h.log[k] > 0 : h.log[k] === true).length;
   return { streak, totalWins, brokenDays: 0, isBreakType: false };
 }
 
@@ -1246,42 +1146,26 @@ function adjustCalMonth(dir) {
 }
 
 function toggleSingleHabit(id, e) {
+  e.stopPropagation();
   createParticles(e);
   haptic(15);
   const h = getHabit(id);
   if (!h) return;
   const todayStr = getTodayStr();
   if (!h.log) h.log = {};
-
   if (h.type === 'break') {
-    if (h.log[todayStr]) {
-      delete h.log[todayStr];
-      showToast('Marked as resisted again! 🛡️');
-    } else {
-      h.log[todayStr] = true;
-      showToast('Shield Broken! Habit slipped today 💥');
-    }
-    syncHabitToCloud(h);
-    renderContent();
-    return;
-  }
-
-  if (h.log[todayStr]) {
-    delete h.log[todayStr];
-    addXp(-10);
-    addCoins(-2);
+    if (h.log[todayStr]) { delete h.log[todayStr]; showToast('Marked as resisted again! 🛡️'); }
+    else { h.log[todayStr] = true; showToast('Shield Broken! 💥'); }
   } else {
-    h.log[todayStr] = true;
-    triggerConfetti();
-    addXp(10);
-    addCoins(2);
-    showToast('Quest Logged! +10 XP ⭐ +2 Coins 💰');
+    if (h.log[todayStr]) { delete h.log[todayStr]; addXp(-10); addCoins(-2); }
+    else { h.log[todayStr] = true; triggerConfetti(); addXp(10); addCoins(2); showToast('+10 XP ⭐ +2 Coins 💰'); }
   }
   syncHabitToCloud(h);
   renderContent();
 }
 
 function adjustMultiReps(id, dir, e) {
+  e.stopPropagation();
   createParticles(e);
   haptic(12);
   const h = getHabit(id);
@@ -1289,40 +1173,24 @@ function adjustMultiReps(id, dir, e) {
   const todayStr = getTodayStr();
   if (!h.log) h.log = {};
   let current = typeof h.log[todayStr] === 'number' ? h.log[todayStr] : 0;
-  const wasPositive = current > 0;
+  const wasPos = current > 0;
   current = Math.max(0, current + dir);
-  if (current === 0) {
-    delete h.log[todayStr];
-  } else {
-    h.log[todayStr] = current;
-    if (dir > 0) triggerConfetti();
-  }
-  if (dir > 0) {
-    addXp(10);
-    addCoins(2);
-    showToast('Quest Logged! +10 XP ⭐ +2 Coins 💰');
-  } else if (dir < 0 && wasPositive) {
-    addXp(-10);
-    addCoins(-2);
-  }
+  if (current === 0) delete h.log[todayStr];
+  else h.log[todayStr] = current;
+  if (dir > 0) { triggerConfetti(); addXp(10); addCoins(2); showToast('+10 XP ⭐ +2 Coins 💰'); }
+  else if (dir < 0 && wasPos) { addXp(-10); addCoins(-2); }
   syncHabitToCloud(h);
   renderContent();
 }
 
 function openAddModal() {
   editingId = null;
-  document.getElementById('modalTitle').textContent = 'Create New Quest 🌟';
-  document.getElementById('hName').value = '';
-  document.getElementById('hType').value = 'daily';
-  document.getElementById('hGoal').value = '60';
-  document.getElementById('deleteBtn').classList.add('hidden');
-  selectedEmoji = EMOJIS[0];
-  selectedColor = COLORS[0];
-  reminderEnabled = false;
+  document.getElementById('modalTitle').textContent = 'Create Quest';
+  document.getElementById('hName').value = ''; document.getElementById('hType').value = 'daily';
+  document.getElementById('hGoal').value = '60'; document.getElementById('deleteBtn').classList.add('hidden');
+  selectedEmoji = EMOJIS[0]; selectedColor = COLORS[0]; reminderEnabled = false;
   document.getElementById('reminderTime').value = '09:00';
-  buildEmojiAndColorPickers();
-  onTypeChange();
-  updateReminderUI();
+  buildEmojiAndColorPickers(); onTypeChange(); updateReminderUI();
   document.getElementById('habitModal').classList.add('open');
 }
 
@@ -1330,121 +1198,55 @@ function openEditModal(id) {
   editingId = id;
   const h = getHabit(id);
   if (!h) return;
-  document.getElementById('modalTitle').textContent = 'Modify Quest ⚔️';
-  document.getElementById('hName').value = h.name;
-  document.getElementById('hType').value = h.type;
-  document.getElementById('hGoal').value = h.goal || 60;
-  document.getElementById('deleteBtn').classList.remove('hidden');
-  selectedEmoji = h.emoji || EMOJIS[0];
-  selectedColor = h.color || COLORS[0];
+  document.getElementById('modalTitle').textContent = 'Edit Quest';
+  document.getElementById('hName').value = h.name; document.getElementById('hType').value = h.type;
+  document.getElementById('hGoal').value = h.goal || 60; document.getElementById('deleteBtn').classList.remove('hidden');
+  selectedEmoji = h.emoji || EMOJIS[0]; selectedColor = h.color || COLORS[0];
   reminderEnabled = !!(h.reminder && h.reminder.enabled);
   if (h.reminder && h.reminder.time) document.getElementById('reminderTime').value = h.reminder.time;
-  buildEmojiAndColorPickers();
-  onTypeChange();
-  if (h.type === 'multi') {
-    if (document.getElementById('hDailyTarget')) document.getElementById('hDailyTarget').value = h.dailyTarget || 3;
-  } else if (h.type === 'weekly') {
-    if (document.getElementById('hWeeklyGoal')) document.getElementById('hWeeklyGoal').value = h.weeklyGoal || 4;
-  }
+  buildEmojiAndColorPickers(); onTypeChange();
+  if (h.type === 'multi' && document.getElementById('hDailyTarget')) document.getElementById('hDailyTarget').value = h.dailyTarget || 3;
+  if (h.type === 'weekly' && document.getElementById('hWeeklyGoal')) document.getElementById('hWeeklyGoal').value = h.weeklyGoal || 4;
   updateReminderUI();
   document.getElementById('habitModal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('habitModal').classList.remove('open');
-  editingId = null;
-}
-
-function closeModalOutside(e) {
-  if (e.target.classList.contains('modal-overlay')) {
-    e.target.classList.remove('open');
-    editingId = null;
-  }
-}
-
-function openSettingsModal() {
-  document.getElementById('settingsModal').classList.add('open');
-}
-
-function closeSettingsModal() {
-  document.getElementById('settingsModal').classList.remove('open');
-}
+function closeModal() { document.getElementById('habitModal').classList.remove('open'); editingId = null; }
+function closeModalOutside(e) { if (e.target.classList.contains('modal-overlay')) { e.target.classList.remove('open'); editingId = null; } }
+function openSettingsModal() { document.getElementById('settingsModal').classList.add('open'); }
+function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
 
 function onTypeChange() {
   const type = document.getElementById('hType').value;
   const extra = document.getElementById('typeExtra');
-  if (type === 'multi') {
-    extra.innerHTML = `
-      <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Target Reps Per Day</label>
-        <input id="hDailyTarget" type="number" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="20" value="3">
-      </div>
-    `;
-  } else if (type === 'weekly') {
-    extra.innerHTML = `
-      <div>
-        <label class="block text-xs font-black uppercase tracking-wider text-brand-muted mb-2">Target Days Per Week</label>
-        <input id="hWeeklyGoal" type="number" class="w-full bg-white/50 border-2 border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="7" value="4">
-      </div>
-    `;
-  } else {
-    extra.innerHTML = '';
-  }
+  if (type === 'multi') extra.innerHTML = `<div><label class="block text-xs font-black uppercase text-brand-muted mb-2">Target Reps/Day</label><input id="hDailyTarget" type="number" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="20" value="3"></div>`;
+  else if (type === 'weekly') extra.innerHTML = `<div><label class="block text-xs font-black uppercase text-brand-muted mb-2">Target Days/Week</label><input id="hWeeklyGoal" type="number" class="w-full bg-white/50 border border-white/80 rounded-2xl px-4 py-3.5 font-bold outline-none focus:border-brand-purple transition-all shadow-inner" min="1" max="7" value="4"></div>`;
+  else extra.innerHTML = '';
 }
 
 function buildEmojiAndColorPickers() {
-  const emojiRow = document.getElementById('emojiRow');
-  const colorRow = document.getElementById('colorRow');
-  
-  emojiRow.innerHTML = EMOJIS.map(em => `
-    <button onclick="selectEmoji('${em}')" type="button" class="w-11 h-11 text-2xl rounded-xl transition-all bouncy-btn flex items-center justify-center ${selectedEmoji === em ? 'bg-brand-purple text-white scale-110 shadow-md' : 'bg-white/40 hover:bg-white/80'}">
-      ${em}
-    </button>
-  `).join('');
-
-  colorRow.innerHTML = COLORS.map(c => `
-    <button onclick="selectColor('${c}')" type="button" class="w-10 h-10 rounded-full shrink-0 border-4 transition-all bouncy-btn ${selectedColor === c ? 'border-brand-ink scale-110 shadow-md' : 'border-white/60'}" style="background-color: ${c}"></button>
-  `).join('');
+  document.getElementById('emojiRow').innerHTML = EMOJIS.map(em => `<button onclick="selectEmoji('${em}')" type="button" class="w-11 h-11 text-2xl rounded-xl transition-all bouncy-btn flex items-center justify-center ${selectedEmoji === em ? 'bg-brand-purple text-white scale-110 shadow-md' : 'bg-white/40 hover:bg-white/80'}">${em}</button>`).join('');
+  document.getElementById('colorRow').innerHTML = COLORS.map(c => `<button onclick="selectColor('${c}')" type="button" class="w-10 h-10 rounded-full shrink-0 border-[3px] transition-all bouncy-btn ${selectedColor === c ? 'border-brand-ink scale-110 shadow-md' : 'border-white/60'}" style="background-color: ${c}"></button>`).join('');
 }
 
-function selectEmoji(em) {
-  selectedEmoji = em;
-  buildEmojiAndColorPickers();
-}
-
-function selectColor(c) {
-  selectedColor = c;
-  buildEmojiAndColorPickers();
-}
-
-function toggleReminder() {
-  reminderEnabled = !reminderEnabled;
-  updateReminderUI();
-}
+function selectEmoji(em) { selectedEmoji = em; buildEmojiAndColorPickers(); }
+function selectColor(c) { selectedColor = c; buildEmojiAndColorPickers(); }
+function toggleReminder() { reminderEnabled = !reminderEnabled; updateReminderUI(); }
 
 function updateReminderUI() {
   const knob = document.getElementById('reminderKnob');
   const toggle = document.getElementById('reminderToggle');
-  if (reminderEnabled) {
-    knob.style.transform = 'translateX(24px)';
-    toggle.style.backgroundColor = '#9B5DE5';
-  } else {
-    knob.style.transform = 'translateX(0)';
-    toggle.style.backgroundColor = 'rgba(0,0,0,0.15)';
-  }
+  if (reminderEnabled) { knob.style.transform = 'translateX(24px)'; toggle.style.backgroundColor = '#9B5DE5'; }
+  else { knob.style.transform = 'translateX(0)'; toggle.style.backgroundColor = 'rgba(0,0,0,0.15)'; }
 }
 
 function saveHabit() {
   const name = document.getElementById('hName').value.trim();
-  if (!name) { showToast('Give your quest a title! 🏷️'); return; }
+  if (!name) { showToast('Give your quest a name! 🏷️'); return; }
   const type = document.getElementById('hType').value;
   const goal = parseInt(document.getElementById('hGoal').value) || 60;
-  
-  let dailyTarget = null;
-  let weeklyGoal = null;
-  if (type === 'multi') dailyTarget = parseInt(document.getElementById('hDailyTarget').value) || 3;
-  if (type === 'weekly') weeklyGoal = parseInt(document.getElementById('hWeeklyGoal').value) || 4;
-
+  let dailyTarget = type === 'multi' ? parseInt(document.getElementById('hDailyTarget').value) || 3 : null;
+  let weeklyGoal = type === 'weekly' ? parseInt(document.getElementById('hWeeklyGoal').value) || 4 : null;
   const reminder = { enabled: reminderEnabled, time: document.getElementById('reminderTime').value || '09:00' };
 
   if (editingId) {
@@ -1452,90 +1254,63 @@ function saveHabit() {
     if (h) {
       h.name = name; h.type = type; h.goal = goal; h.emoji = selectedEmoji; h.color = selectedColor;
       h.reminder = reminder; h.dailyTarget = dailyTarget; h.weeklyGoal = weeklyGoal;
-      syncHabitToCloud(h);
-      showToast('Quest Blueprint Updated! 🧭');
+      syncHabitToCloud(h); showToast('Quest Updated! 🧭');
     }
   } else {
-    const newH = {
-      id: generateHabitId(), name: name, type: type, goal: goal, emoji: selectedEmoji, color: selectedColor,
-      reminder: reminder, dailyTarget: dailyTarget, weeklyGoal: weeklyGoal, log: {}, notes: {}, shieldBank: 2, createdAt: new Date().toISOString()
-    };
-    habits.push(newH);
-    activeId = newH.id;
-    syncHabitToCloud(newH);
-    showToast('New Quest Discovered! 🌟');
+    const newH = { id: generateHabitId(), name, type, goal, emoji: selectedEmoji, color: selectedColor, reminder, dailyTarget, weeklyGoal, log: {}, notes: {}, shieldBank: 2, createdAt: new Date().toISOString() };
+    habits.push(newH); setView('habit_detail', newH.id); syncHabitToCloud(newH); showToast('Quest Discovered! 🌟');
   }
-  renderAll();
-  closeModal();
+  renderAll(); closeModal();
 }
 
 function promptDeleteHabit() {
   if (!editingId) return;
   const h = getHabit(editingId);
-  showConfirmModal('Delete Quest Permanently', `Are you sure you want to banish "${h.name}" forever? Your history will be wiped out!`, () => {
+  showConfirmModal('Delete Quest', `Are you sure you want to banish "${h.name}" forever?`, () => {
     habits = habits.filter(x => x.id !== editingId);
     deleteHabitFromCloud(editingId);
-    if (activeId === editingId) activeId = habits[0]?.id || null;
-    renderAll();
-    closeModal();
-    showToast('Quest removed from spellbook');
+    if (activeId === editingId) setView('dashboard');
+    renderAll(); closeModal(); showToast('Quest removed.');
   });
 }
 
 function openNoteModal(dateStr) {
   notesEditingDate = dateStr;
-  const h = getHabit(activeId) || habits[0];
+  const h = getHabit(activeId);
+  if (!h) return;
   document.getElementById('noteDateLabel').textContent = `Story for ${dateStr}`;
-  const currentNote = h.notes && h.notes[dateStr] ? h.notes[dateStr] : '';
-  document.getElementById('noteText').value = currentNote;
-  document.getElementById('noteDeleteBtn').classList.toggle('hidden', !currentNote);
+  const cNote = h.notes && h.notes[dateStr] ? h.notes[dateStr] : '';
+  document.getElementById('noteText').value = cNote;
+  document.getElementById('noteDeleteBtn').classList.toggle('hidden', !cNote);
   
   const historyList = document.getElementById('diaryHistoryList');
   let historyHtml = '';
   if (h.notes) {
     Object.keys(h.notes).sort((a,b) => b.localeCompare(a)).forEach(d => {
-      if (h.notes[d]) {
-        historyHtml += `
-          <div class="p-3 bg-white/40 border border-white rounded-xl text-xs font-bold text-brand-ink">
-            <div class="text-brand-purple mb-1 font-display">${d}</div>
-            <div>${h.notes[d]}</div>
-          </div>
-        `;
-      }
+      if (h.notes[d]) historyHtml += `<div class="p-3 bg-white/50 border border-white rounded-xl text-xs font-bold text-brand-ink"><div class="text-brand-purple mb-1 font-display">${d}</div><div>${h.notes[d]}</div></div>`;
     });
   }
-  historyList.innerHTML = historyHtml || `<div class="text-xs text-brand-muted font-bold text-center py-2">No past entries written.</div>`;
+  historyList.innerHTML = historyHtml || `<div class="text-xs text-brand-muted font-bold text-center py-2">No entries yet.</div>`;
   document.getElementById('noteModal').classList.add('open');
 }
 
-function closeNoteModal() {
-  document.getElementById('noteModal').classList.remove('open');
-}
+function closeNoteModal() { document.getElementById('noteModal').classList.remove('open'); }
 
 function saveNote() {
   const text = document.getElementById('noteText').value.trim();
-  const h = getHabit(activeId) || habits[0];
+  const h = getHabit(activeId);
   if (!h) return;
   if (!h.notes) h.notes = {};
-  if (text) {
-    h.notes[notesEditingDate] = text;
-    showToast('Story recorded into diary! 📝');
-  } else {
-    delete h.notes[notesEditingDate];
-  }
-  syncHabitToCloud(h);
-  renderContent();
-  closeNoteModal();
+  if (text) { h.notes[notesEditingDate] = text; showToast('Story recorded! 📝'); }
+  else delete h.notes[notesEditingDate];
+  syncHabitToCloud(h); renderContent(); closeNoteModal();
 }
 
 function deleteNote() {
-  const h = getHabit(activeId) || habits[0];
+  const h = getHabit(activeId);
   if (!h || !h.notes) return;
   delete h.notes[notesEditingDate];
-  syncHabitToCloud(h);
-  renderContent();
-  closeNoteModal();
-  showToast('Story deleted');
+  syncHabitToCloud(h); renderContent(); closeNoteModal(); showToast('Story deleted.');
 }
 
 function showConfirmModal(title, msg, callback) {
@@ -1545,33 +1320,20 @@ function showConfirmModal(title, msg, callback) {
   btn.onclick = () => { callback(); closeConfirmModal(); };
   document.getElementById('confirmModal').classList.add('open');
 }
-
-function closeConfirmModal() {
-  document.getElementById('confirmModal').classList.remove('open');
-}
+function closeConfirmModal() { document.getElementById('confirmModal').classList.remove('open'); }
 
 function showToast(msg) {
   const toast = document.getElementById('toast');
   document.getElementById('toastMsg').textContent = msg;
-  toast.style.opacity = '1';
-  toast.style.pointerEvents = 'all';
-  toast.style.transform = 'translate(-50%, 0)';
+  toast.style.opacity = '1'; toast.style.pointerEvents = 'all'; toast.style.transform = 'translate(-50%, 0)';
   clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.pointerEvents = 'none';
-    toast.style.transform = 'translate(-50%, 16px)';
-  }, 3000);
+  window.toastTimer = setTimeout(() => { toast.style.opacity = '0'; toast.style.pointerEvents = 'none'; toast.style.transform = 'translate(-50%, 16px)'; }, 3000);
 }
 
 function exportData() {
   const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(habits, null, 2));
-  const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `trailmark_quest_backpack_${Date.now()}.json`);
-  document.body.appendChild(downloadAnchor);
-  downloadAnchor.click();
-  downloadAnchor.remove();
+  const a = document.createElement('a'); a.href = dataStr; a.download = `trailmark_backup_${Date.now()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
 function importData(event) {
@@ -1580,28 +1342,20 @@ function importData(event) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const imported = JSON.parse(e.target.result);
-      if (Array.isArray(imported)) {
-        habits = imported;
-        if (habits.length > 0) activeId = habits[0].id;
+      const imp = JSON.parse(e.target.result);
+      if (Array.isArray(imp)) {
+        habits = imp;
         habits.forEach(h => syncHabitToCloud(h));
-        renderAll();
-        showToast('Backpack inventory imported successfully! 🎒');
-      } else {
-        showToast('Invalid file structure.');
-      }
-    } catch (err) {
-      showToast('Could not parse JSON.');
-    }
+        setView('dashboard'); showToast('Backup imported! 🎒');
+      } else showToast('Invalid file format.');
+    } catch (err) { showToast('Parse error.'); }
   };
   reader.readAsText(file);
 }
 
 function promptResetKeys() {
-  showConfirmModal('Disconnect Account', 'Are you sure you want to disconnect your database keys? Your offline logs will stay safe locally.', () => {
-    localStorage.removeItem('SB_URL');
-    localStorage.removeItem('SB_KEY');
-    location.reload();
+  showConfirmModal('Disconnect', 'Are you sure you want to disconnect? Local data stays safe.', () => {
+    localStorage.removeItem('SB_URL'); localStorage.removeItem('SB_KEY'); location.reload();
   });
 }
 
@@ -1610,11 +1364,8 @@ window.addEventListener('offline', () => setSyncStatus('offline'));
 
 window.onload = () => {
   checkSetup();
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').then(reg => {
-      swRegistration = reg;
-    }).catch(err => {});
-  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+  updateCoinBadge();
 };
 </script>
 </body>
